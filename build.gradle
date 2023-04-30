@@ -1,0 +1,44 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.7.9"
+}
+
+version = "0.1"
+group = "krystian.kryszczak"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("io.micronaut.rxjava3:micronaut-rxjava3")
+    implementation("io.micronaut.rxjava3:micronaut-rxjava3-http-client")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    compileOnly("org.graalvm.nativeimage:svm")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    implementation("com.discord4j:discord4j-core:3.2.4")
+}
+
+application {
+    mainClass.set("krystian.kryszczak.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("krystian.kryszczak.*")
+    }
+}

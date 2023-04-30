@@ -40,3 +40,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Micronaut ###
+Thumbs.db
+target/
+.micronaut/
+.idea

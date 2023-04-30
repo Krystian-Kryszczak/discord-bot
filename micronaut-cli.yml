@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: krystian.kryszczak
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [annotation-api, app-name, graalvm, gradle, http-client, jackson-databind, java, java-application, junit, logback, lombok, micronaut-build, netty-server, readme, rxjava3, rxjava3-http-client, shade, yaml]
