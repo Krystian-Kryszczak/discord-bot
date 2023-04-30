@@ -1,7 +1,20 @@
 micronaut:
   application:
-    name: discordBot
+    name: DiscordBot
+  http:
+    services:
+      eleven-labs:
+        url: 'https://api.elevenlabs.io'
 netty:
   default:
     allocator:
       max-order: 3
+discord:
+  token: ${DISCORD_API_KEY}
+eleven-labs:
+  token: ${ELEVENLABS_API_KEY}
+  default-voice-id: TxGEqnHWrfWFTfGW9XjX
+  default-model-id: eleven_monolingual_v1
+  default-voice-settings:
+    stability: 0.5f
+    similarity-boost: 1.0f

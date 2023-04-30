@@ -22,6 +22,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("ch.qos.logback:logback-classic")
 
+    compileOnly("org.jetbrains:annotations:24.0.1")
+
     implementation("com.discord4j:discord4j-core:3.2.4")
 }
 
@@ -33,7 +35,14 @@ java {
     targetCompatibility = JavaVersion.toVersion("17")
 }
 
-graalvmNative.toolchainDetection = false
+graalvmNative {
+    binaries {
+        main {
+            imageName.set('mn-graalvm-application')
+            buildArgs.add('--verbose')
+        }
+    }
+}
 micronaut {
     runtime("netty")
     testRuntime("junit5")
