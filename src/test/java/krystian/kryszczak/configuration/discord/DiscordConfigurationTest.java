@@ -13,11 +13,13 @@ public final class DiscordConfigurationTest {
     void testDiscordConfiguration() {
         final Map<String, Object> items = new HashMap<>();
         items.put("discord.token", "test-token");
+        items.put("discord.command-prefix", "!");
 
         ApplicationContext ctx = ApplicationContext.run(items);
         DiscordConfiguration discordConfiguration = ctx.getBean(DiscordConfiguration.class);
 
         assertEquals("test-token", discordConfiguration.getToken());
+        assertEquals("!", discordConfiguration.getCommandPrefix());
 
         ctx.close();
     }

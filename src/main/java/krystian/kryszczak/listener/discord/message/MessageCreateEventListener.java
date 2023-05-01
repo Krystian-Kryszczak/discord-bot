@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.command.Command;
+import krystian.kryszczak.configuration.discord.DiscordConfiguration;
 import krystian.kryszczak.listener.discord.DiscordEventListener;
 import org.reactivestreams.Publisher;
 
@@ -13,18 +14,21 @@ import java.util.Map;
 
 @Singleton
 public final class MessageCreateEventListener extends DiscordEventListener<MessageCreateEvent> {
-    public MessageCreateEventListener(GatewayDiscordClient gatewayDiscordClient) {
+    private final String commandPrefix;
+
+    public MessageCreateEventListener(final GatewayDiscordClient gatewayDiscordClient, final DiscordConfiguration configuration) {
         super(gatewayDiscordClient, MessageCreateEvent.class);
+        this.commandPrefix = configuration.getCommandPrefix();
     }
 
     @Override
     public Publisher<?> onEventCall(final MessageCreateEvent event) {
         return Single.just(event.getMessage().getContent())
-            .filter(message -> message.startsWith("!"))
-            .map(it -> it.replace("!", ""))
+            .filter(message -> message.startsWith(commandPrefix))
+            .map(it -> it.replace(commandPrefix, ""))
             .flatMapPublisher(content ->
                 Observable.fromIterable(Command.commands.entrySet())
-                    .filter(entry -> entry.getKey().startsWith(content))
+                    .filter(entry -> entry.getKey().startsWith(content.split(" ")[0]))
                     .firstElement().map(Map.Entry::getValue)
                     .flatMapPublisher(it -> it.execute(event))
             );
