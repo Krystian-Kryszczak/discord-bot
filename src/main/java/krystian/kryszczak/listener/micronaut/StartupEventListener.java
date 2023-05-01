@@ -1,6 +1,5 @@
 package krystian.kryszczak.listener.micronaut;
 
-import discord4j.core.GatewayDiscordClient;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
@@ -17,7 +16,6 @@ public final class StartupEventListener {
     private static final Logger logger = LoggerFactory.getLogger(StartupEventListener.class);
 
     private final ApplicationContext applicationContext;
-    private final GatewayDiscordClient gatewayDiscordClient;
 
     @EventListener
     public void onStartupEvent(StartupEvent event) {
