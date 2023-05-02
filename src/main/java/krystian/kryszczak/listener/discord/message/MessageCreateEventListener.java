@@ -15,10 +15,12 @@ import java.util.Map;
 @Singleton
 public final class MessageCreateEventListener extends DiscordEventListener<MessageCreateEvent> {
     private final String commandPrefix;
+    private final boolean autoRemoveCommand;
 
     public MessageCreateEventListener(final GatewayDiscordClient gatewayDiscordClient, final DiscordConfiguration configuration) {
         super(gatewayDiscordClient, MessageCreateEvent.class);
         this.commandPrefix = configuration.getCommandPrefix();
+        this.autoRemoveCommand = configuration.isAutoRemoveCommand();
     }
 
     @Override
@@ -26,11 +28,15 @@ public final class MessageCreateEventListener extends DiscordEventListener<Messa
         return Single.just(event.getMessage().getContent())
             .filter(message -> message.startsWith(commandPrefix))
             .map(it -> it.replace(commandPrefix, ""))
-            .flatMapPublisher(content ->
-                Observable.fromIterable(Command.commands.entrySet())
+            .flatMapPublisher(content -> {
+                if (autoRemoveCommand) {
+                    event.getMessage().delete()
+                        .subscribe();
+                }
+                return Observable.fromIterable(Command.commands.entrySet())
                     .filter(entry -> entry.getKey().startsWith(content.split(" ")[0]))
                     .firstElement().map(Map.Entry::getValue)
-                    .flatMapPublisher(it -> it.execute(event))
-            );
+                    .flatMapPublisher(it -> it.execute(event));
+            });
     }
 }

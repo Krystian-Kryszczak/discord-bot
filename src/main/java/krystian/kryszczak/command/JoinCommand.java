@@ -4,7 +4,7 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.VoiceState;
 import discord4j.core.object.entity.Member;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.model.lavaplayer.LavaPlayerAudioProvider;
+import krystian.kryszczak.model.audio.LavaPlayerAudioProvider;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 

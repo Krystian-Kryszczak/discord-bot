@@ -6,7 +6,7 @@ import org.reactivestreams.Publisher;
 
 @Singleton
 public final class PingCommand extends Command {
-    public PingCommand() {
+    PingCommand() {
         super("ping");
     }
 

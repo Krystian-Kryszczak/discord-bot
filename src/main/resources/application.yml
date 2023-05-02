@@ -12,13 +12,15 @@ netty:
 discord:
   token: ${DISCORD_BOT_TOKEN}
   command-prefix: "!"
+  auto-remove-command: true
 open-ai:
   token: ${OPEN_AI_TOKEN}
   gpt-model: ${$OPEN_AI_GPT_MODEL:gpt-3.5-turbo}
 eleven-labs:
   token: ${ELEVENLABS_API_KEY}
   default-voice-id: TxGEqnHWrfWFTfGW9XjX
-  default-model-id: eleven_monolingual_v1
+  default-model-id: eleven_multilingual_v1
   default-voice-settings:
     stability: 0.5f
     similarity-boost: 1.0f
+  default-save-folder: "./saved"

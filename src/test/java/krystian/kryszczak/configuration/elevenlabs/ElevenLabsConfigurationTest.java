@@ -18,6 +18,7 @@ public final class ElevenLabsConfigurationTest {
         items.put("eleven-labs.default-model-id", "eleven_monolingual_v1");
         items.put("eleven-labs.default-voice-settings.stability", 0.5f);
         items.put("eleven-labs.default-voice-settings.similarity-boost", 1.0f);
+        items.put("eleven-labs.default-save-folder", "./saved");
 
         ApplicationContext ctx = ApplicationContext.run(items);
         ElevenLabsConfiguration elevenlabsConfiguration = ctx.getBean(ElevenLabsConfiguration.class);

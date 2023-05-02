@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer;
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Singleton;
@@ -17,6 +18,8 @@ public final class LavaPlayerFactory {
 
         playerManager.getConfiguration()
             .setFrameBufferFactory(NonAllocatingAudioFrameBuffer::new);
+
+        playerManager.registerSourceManager(new LocalAudioSourceManager());
 
         AudioSourceManagers.registerRemoteSources(playerManager);
 
