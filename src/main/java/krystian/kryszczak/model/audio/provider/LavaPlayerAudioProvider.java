@@ -1,4 +1,4 @@
-package krystian.kryszczak.model.audio;
+package krystian.kryszczak.model.audio.provider;
 
 import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;

@@ -3,7 +3,7 @@ package krystian.kryszczak.command;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.model.audio.TrackScheduler;
+import krystian.kryszczak.model.audio.scheduler.TrackScheduler;
 import krystian.kryszczak.service.speech.TextToSpeechService;
 import lombok.SneakyThrows;
 import org.reactivestreams.Publisher;
