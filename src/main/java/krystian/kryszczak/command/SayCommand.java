@@ -1,39 +1,52 @@
 package krystian.kryszczak.command;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import discord4j.core.event.domain.message.MessageCreateEvent;
+import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.model.audio.scheduler.TrackScheduler;
 import krystian.kryszczak.service.speech.TextToSpeechService;
-import lombok.SneakyThrows;
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Singleton
 public final class SayCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(SayCommand.class);
+    private static final String ARG_NAME = "phrase";
+
     private final AudioPlayerManager playerManager;
     private final TrackScheduler scheduler;
     private final TextToSpeechService textToSpeechService;
 
     SayCommand(final AudioPlayerManager playerManager, final TrackScheduler scheduler, final TextToSpeechService textToSpeechService) {
-        super("say");
+        super("say", "The bot will speak your command.", new OptionData[] {
+            new OptionData(OptionType.STRING, ARG_NAME, "Phrase to say by Bot.").setRequired(true)
+        });
         this.playerManager = playerManager;
         this.scheduler = scheduler;
         this.textToSpeechService = textToSpeechService;
     }
 
-    @SneakyThrows
     @Override
-    public Publisher<Void> execute(MessageCreateEvent event) {
-        return Mono.justOrEmpty(event.getMessage().getContent())
-            .map(content -> content.split(" "))
-            .filter(args -> args.length > 1)
-            .map(args -> Arrays.stream(args).skip(1).collect(Collectors.joining(" "))).flux()
-            .flatMap(text -> textToSpeechService.textToSpeechBufferedFile(text).toFlowable())
-            .doOnNext(file -> playerManager.loadItem(file.getAbsolutePath(), scheduler))
-            .then();
+    public void execute(SlashCommandInteractionEvent event) {
+        Maybe.fromOptional(Optional.ofNullable(event.getOption(ARG_NAME)))
+            .map(OptionMapping::getAsString)
+            .filter(phrase -> !phrase.isBlank())
+            .doOnSuccess(
+                phrase -> textToSpeechService.textToSpeechBufferedFile(phrase)
+                    .map(file -> playerManager.loadItem(file.getAbsolutePath(), scheduler))
+                    .subscribe()
+            )
+            .map(phrase -> "I saying: \"" + phrase + "\"")
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorReturnItem("Error")
+            .defaultIfEmpty("You must define valid phrase to say for me!")
+            .doAfterSuccess(it -> event.reply(it).setEphemeral(true).queue())
+            .subscribe();
     }
 }

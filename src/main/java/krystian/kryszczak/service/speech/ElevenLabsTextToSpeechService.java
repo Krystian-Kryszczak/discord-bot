@@ -6,6 +6,7 @@ import jakarta.inject.Singleton;
 import krystian.kryszczak.configuration.elevenlabs.ElevenLabsConfiguration;
 import krystian.kryszczak.http.elevenlabs.ElevenLabsRxHttpClient;
 import krystian.kryszczak.model.elevenlabs.TextToSpeech;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -27,14 +28,15 @@ public final class ElevenLabsTextToSpeechService implements TextToSpeechService 
         }
     }
 
+    @SneakyThrows
     @Override
     public Single<File> textToSpeechBufferedFile(@NotNull String text) {
         final File file = new File(savedFolder, text + ".mpeg");
-        if (!file.exists() || !file.isFile()) {
+        if (!file.exists() && file.createNewFile()) {
             try (final FileOutputStream outputStream = new FileOutputStream(file)) {
                 outputStream.write(
                     httpClient.textToSpeech(factory.createWithDefaults(text)).map(HttpResponse::body)
-                        .blockingGet()
+                            .blockingGet()
                 );
             } catch (IOException e) {
                 throw new RuntimeException(e);

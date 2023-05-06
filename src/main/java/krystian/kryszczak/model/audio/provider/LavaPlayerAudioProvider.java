@@ -1,30 +1,32 @@
 package krystian.kryszczak.model.audio.provider;
 
-import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
-import discord4j.voice.AudioProvider;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import jakarta.inject.Singleton;
+import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
 
 import java.nio.ByteBuffer;
 
 @Singleton
-public final class LavaPlayerAudioProvider extends AudioProvider {
-    private final AudioPlayer player;
-    private final MutableAudioFrame frame = new MutableAudioFrame();
+@RequiredArgsConstructor
+public final class LavaPlayerAudioProvider implements AudioSendHandler {
+    private final AudioPlayer audioPlayer;
+    private AudioFrame lastFrame;
 
-    public LavaPlayerAudioProvider(final AudioPlayer player) {
-        super(ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize()));
-        frame.setBuffer(getBuffer());
-        this.player = player;
+    @Override
+    public boolean canProvide() {
+        lastFrame = audioPlayer.provide();
+        return lastFrame != null;
     }
 
     @Override
-    public boolean provide() {
-        final boolean didProvide = player.provide(frame);
-        if (didProvide) {
-            getBuffer().flip();
-        }
-        return didProvide;
+    public ByteBuffer provide20MsAudio() {
+        return ByteBuffer.wrap(lastFrame.getData());
+    }
+
+    @Override
+    public boolean isOpus() {
+        return true;
     }
 }
