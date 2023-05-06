@@ -13,16 +13,11 @@ repositories {
 
 dependencies {
     annotationProcessor("org.projectlombok:lombok")
-    annotationProcessor("info.picocli:picocli-codegen")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("info.picocli:picocli")
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.picocli:micronaut-picocli")
     implementation("io.micronaut.rxjava3:micronaut-rxjava3")
     implementation("io.micronaut.rxjava3:micronaut-rxjava3-http-client")
     implementation("jakarta.annotation:jakarta.annotation-api")
-    compileOnly("org.graalvm.nativeimage:svm")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("ch.qos.logback:logback-classic")
 
@@ -42,14 +37,6 @@ java {
     targetCompatibility = JavaVersion.toVersion("17")
 }
 
-graalvmNative {
-    binaries {
-        main {
-            imageName.set('mn-graalvm-application')
-            buildArgs.add('--verbose')
-        }
-    }
-}
 micronaut {
     runtime("netty")
     testRuntime("junit5")

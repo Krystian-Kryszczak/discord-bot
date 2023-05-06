@@ -1,21 +1,10 @@
 package krystian.kryszczak;
 
-import io.micronaut.configuration.picocli.PicocliRunner;
-import jakarta.inject.Inject;
-import lombok.NoArgsConstructor;
-import net.dv8tion.jda.api.JDA;
-import picocli.CommandLine.Command;
+import io.micronaut.runtime.Micronaut;
 
-@Command(name = "discord-bot", mixinStandardHelpOptions = true)
-@NoArgsConstructor
-public final class Application implements Runnable {
-    @Inject
-    private JDA jda;
+public final class Application {
 
     public static void main(String[] args) {
-        PicocliRunner.run(Application.class, args);
+        Micronaut.run(Application.class, args);
     }
-
-    @Override
-    public void run() {}
 }

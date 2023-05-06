@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
+import java.util.Objects;
 
 @Singleton
 public final class SayCommand extends Command {
@@ -34,13 +34,14 @@ public final class SayCommand extends Command {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        Maybe.fromOptional(Optional.ofNullable(event.getOption(ARG_NAME)))
+        Maybe.just(Objects.requireNonNull(event.getOption(ARG_NAME)))
+            .onErrorComplete()
             .map(OptionMapping::getAsString)
             .filter(phrase -> !phrase.isBlank())
             .doOnSuccess(
                 phrase -> textToSpeechService.textToSpeechBufferedFile(phrase)
-                    .map(file -> playerManager.loadItem(file.getAbsolutePath(), scheduler))
-                    .subscribe()
+                .map(file -> playerManager.loadItem(file.getAbsolutePath(), scheduler))
+                .subscribe()
             )
             .map(phrase -> "I saying: \"" + phrase + "\"")
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))

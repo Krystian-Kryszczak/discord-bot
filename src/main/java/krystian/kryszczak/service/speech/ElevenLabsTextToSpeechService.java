@@ -1,6 +1,5 @@
 package krystian.kryszczak.service.speech;
 
-import io.micronaut.http.HttpResponse;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.configuration.elevenlabs.ElevenLabsConfiguration;
@@ -11,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Objects;
 
 @Singleton
 public final class ElevenLabsTextToSpeechService implements TextToSpeechService {
@@ -33,14 +32,12 @@ public final class ElevenLabsTextToSpeechService implements TextToSpeechService 
     public Single<File> textToSpeechBufferedFile(@NotNull String text) {
         final File file = new File(savedFolder, text + ".mpeg");
         if (!file.exists() && file.createNewFile()) {
-            try (final FileOutputStream outputStream = new FileOutputStream(file)) {
-                outputStream.write(
-                    httpClient.textToSpeech(factory.createWithDefaults(text)).map(HttpResponse::body)
-                            .blockingGet()
-                );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            final FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(
+                Objects.requireNonNull(httpClient.textToSpeech(factory.createWithDefaults(text))
+                    .blockingGet().body())
+            );
+            outputStream.close();
         }
         return Single.just(file);
     }

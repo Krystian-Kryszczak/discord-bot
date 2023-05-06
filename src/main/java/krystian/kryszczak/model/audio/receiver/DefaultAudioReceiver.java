@@ -59,15 +59,7 @@ public final class DefaultAudioReceiver implements AudioReceiveHandler {
     }
 
     private void collectReceived() {
-        int size = 0;
-        for (byte[] bs : receivedBytes) {
-            size += bs.length;
-        }
-
-        final int size2 = receivedBytes.stream().mapToInt(bytes -> bytes.length).sum();
-
-        logger.info(String.valueOf(size2 == size));
-
+        final int size = receivedBytes.stream().mapToInt(bytes -> bytes.length).sum();
         final byte[] decodedData = new byte[size];
 
         int i = 0;

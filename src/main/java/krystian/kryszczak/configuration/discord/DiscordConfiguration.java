@@ -8,5 +8,4 @@ import lombok.Data;
 public class DiscordConfiguration {
     private String token;
     private String commandPrefix;
-    private boolean autoRemoveCommand;
 }
