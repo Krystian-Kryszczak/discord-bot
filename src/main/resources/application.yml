@@ -4,17 +4,19 @@ micronaut:
   http:
     services:
       eleven-labs:
-        url: 'https://api.elevenlabs.io'
+        url: https://api.elevenlabs.io
+      open-ai:
+        url: https://api.openai.com
 netty:
   default:
     allocator:
       max-order: 3
 discord:
   token: ${DISCORD_BOT_TOKEN}
-  command-prefix: "!"
 open-ai:
   token: ${OPEN_AI_TOKEN}
   gpt-model: ${$OPEN_AI_GPT_MODEL:gpt-3.5-turbo}
+  audio-model: ${$OPEN_AI_AUDIO_MODEL:whisper-1}
 eleven-labs:
   token: ${ELEVENLABS_API_KEY}
   default-voice-id: TxGEqnHWrfWFTfGW9XjX
@@ -23,3 +25,9 @@ eleven-labs:
     stability: 0.5f
     similarity-boost: 1.0f
   default-save-folder: "./saved"
+logger:
+  levels:
+    io:
+      micronaut:
+        http:
+          client: DEBUG

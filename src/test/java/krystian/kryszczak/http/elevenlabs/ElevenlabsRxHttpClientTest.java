@@ -20,7 +20,7 @@ public final class ElevenlabsRxHttpClientTest {
     private TextToSpeech.Factory factory;
 
     @Test
-    void testTextToSpeechStream() throws IOException {
+    void testTextToSpeech() throws IOException {
         final var response = httpClient.textToSpeechStream(factory.createWithDefaults("Hello world!"));
         final var first = response.blockingFirst();
         assertEquals(HttpStatus.OK, first.getStatus());

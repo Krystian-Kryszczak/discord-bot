@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.model.audio.scheduler.TrackScheduler;
-import krystian.kryszczak.service.speech.TextToSpeechService;
+import krystian.kryszczak.service.speech.text.TextToSpeechService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

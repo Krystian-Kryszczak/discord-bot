@@ -11,15 +11,16 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Singleton
-public final class DefaultAudioReceiver implements AudioReceiveHandler {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultAudioReceiver.class);
+public final class SpeechRecognitionAudioReceiver implements AudioReceiveHandler {
+    private static final Logger logger = LoggerFactory.getLogger(SpeechRecognitionAudioReceiver.class);
 
-    private final List<byte[]> receivedBytes = new ArrayList<>();
+    private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
+    private int bytesCount = 0;
     private long latestTime = 0;
 
     private File getNextFile() throws IOException {
@@ -39,34 +40,34 @@ public final class DefaultAudioReceiver implements AudioReceiveHandler {
 
     @Override
     public void handleUserAudio(@NotNull UserAudio userAudio) {
-        long now = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
         try {
-            receiveAudioData(userAudio.getAudioData(1.0));
+            byte[] data = userAudio.getAudioData(1.0f);
 
-            if (latestTime > 0 && now - latestTime > 500) {
+            queue.add(data);
+            bytesCount += data.length;
+
+            if (latestTime > 0 && start - latestTime > 500) {
 //                getWavFile(getNextFile(), decodedData);
-                collectReceived();
             }
-            latestTime = now;
+
+            latestTime = start;
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
     }
 
-    private void receiveAudioData(final byte @NotNull [] audio) {
-        receivedBytes.add(audio);
-    }
-
-    private void collectReceived() {
-        final int size = receivedBytes.stream().mapToInt(bytes -> bytes.length).sum();
-        final byte[] decodedData = new byte[size];
-
+    private byte[] collectQueueData() {
+        final byte[] result = new byte[bytesCount];
         int i = 0;
-        for (byte[] bs : receivedBytes) {
-            for (byte b : bs) {
-                decodedData[i++] = b;
+        for (final byte[] bytes : queue) {
+            for (final byte e : bytes) {
+                result[i] = e;
+                i++;
             }
         }
+        queue.clear();
+        return result;
     }
 }

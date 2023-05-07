@@ -17,15 +17,18 @@ public final class OpenAiConfigurationTest {
         Map<String, Object> items = new HashMap<>();
         items.put("open-ai.token", "sk-test-token");
         items.put("open-ai.gpt-model", "gpt-3.5-turbo");
+        items.put("open-ai.audio-model", "whisper-1");
 
         ApplicationContext ctx = ApplicationContext.run(items);
         OpenAiConfiguration openAiConfiguration = ctx.getBean(OpenAiConfiguration.class);
 
         String token = openAiConfiguration.getToken();
         String gptModel = openAiConfiguration.getGptModel();
+        String audioModel = openAiConfiguration.getAudioModel();
 
         assertEquals("sk-test-token", token);
         assertEquals("gpt-3.5-turbo", gptModel);
+        assertEquals("whisper-1", audioModel);
 
         ctx.close();
     }
