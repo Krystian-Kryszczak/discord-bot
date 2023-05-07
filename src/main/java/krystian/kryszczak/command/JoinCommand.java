@@ -16,12 +16,10 @@ import java.util.Optional;
 @Singleton
 public final class JoinCommand extends Command {
     private final LavaPlayerAudioProvider provider;
-    private final AudioReceiveHandler receiver;
 
     JoinCommand(final LavaPlayerAudioProvider provider, final AudioReceiveHandler receiver) {
         super("join", "Add bot to your current voice channel.");
         this.provider = provider;
-        this.receiver = receiver;
     }
 
     @Override
@@ -46,7 +44,6 @@ public final class JoinCommand extends Command {
                 final var audioManager = guild.getAudioManager();
 
                 audioManager.setSendingHandler(provider);
-                audioManager.setReceivingHandler(receiver);
                 audioManager.openAudioConnection(channel);
 
                 return Maybe.just(channel);

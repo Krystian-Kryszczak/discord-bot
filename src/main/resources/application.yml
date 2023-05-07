@@ -5,6 +5,10 @@ micronaut:
     services:
       eleven-labs:
         url: 'https://api.elevenlabs.io'
+netty:
+  default:
+    allocator:
+      max-order: 3
 discord:
   token: ${DISCORD_BOT_TOKEN}
   command-prefix: "!"

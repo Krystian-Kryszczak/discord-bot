@@ -30,7 +30,6 @@ public final class PlayCommand extends Command {
     public void execute(SlashCommandInteractionEvent event) {
         Maybe.fromOptional(Optional.ofNullable(event.getOption(URL)))
             .map(OptionMapping::getAsString)
-            .doOnSuccess(System.out::println)
             .doAfterSuccess(url -> playerManager.loadItem(url, scheduler))
             .map(url -> "I'm playing: " + url)
             .onErrorReturn(throwable -> "Error: " + throwable.getMessage())
