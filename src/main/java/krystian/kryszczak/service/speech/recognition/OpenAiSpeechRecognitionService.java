@@ -20,8 +20,9 @@ public final class OpenAiSpeechRecognitionService implements SpeechRecognitionSe
     public Single<String> recognizeSpeech(final @NotNull File file) {
         return httpClient.createTranscription(
             MultipartBody.builder()
-                .addPart("model", configuration.getAudioModel())
                 .addPart("file", file)
+                .addPart("model", configuration.getAudioModel())
+                .addPart("response_format", "text")
                 .build()
         );
     }
