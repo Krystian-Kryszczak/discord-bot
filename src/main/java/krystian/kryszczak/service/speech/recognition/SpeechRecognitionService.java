@@ -7,4 +7,5 @@ import java.io.File;
 
 public sealed interface SpeechRecognitionService permits OpenAiSpeechRecognitionService {
     Single<String> recognizeSpeech(final @NotNull File file);
+    Single<String> recognizeSpeech(final byte @NotNull [] audioData);
 }
