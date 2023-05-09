@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 @RequiredArgsConstructor
-public final class SpeechRecognitionAudioReceiver implements AudioReceiveHandler {
-    private static final Logger logger = LoggerFactory.getLogger(SpeechRecognitionAudioReceiver.class);
+public final class ConversationAudioReceiver implements AudioReceiveHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
@@ -28,6 +28,7 @@ public final class SpeechRecognitionAudioReceiver implements AudioReceiveHandler
     private static final long AWAIT_TIME_MILLIS = 500;
     private static final Executor executor = CompletableFuture.delayedExecutor((int) (AWAIT_TIME_MILLIS * 1.1), TimeUnit.MILLISECONDS);
     private static boolean watcherActive = false;
+    private static boolean listening = true;
 
     @Override
     public boolean canReceiveUser() {
