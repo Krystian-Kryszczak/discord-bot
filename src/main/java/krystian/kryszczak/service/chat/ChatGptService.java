@@ -30,6 +30,7 @@ public final class ChatGptService implements ChatService {
                     .messages(List.of(new ChatMessage(ChatMessageRole.USER.value(), message)))
                     .build()
             ).getChoices())
+        .onErrorComplete()
         .map(ChatCompletionChoice::getMessage)
         .map(ChatMessage::getContent)
         .collect(Collectors.joining());

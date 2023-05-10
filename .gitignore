@@ -47,4 +47,6 @@ target/
 .micronaut/
 .idea
 
-saved/*
+storage/*
+storage/receiver/*
+storage/provider/*

@@ -24,7 +24,7 @@ eleven-labs:
   default-voice-settings:
     stability: 0.5f
     similarity-boost: 1.0f
-  default-save-folder: "./saved"
+  default-save-folder: "storage/provider"
 logger:
   levels:
     io:

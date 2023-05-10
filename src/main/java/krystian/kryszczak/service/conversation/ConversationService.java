@@ -1,7 +1,8 @@
 package krystian.kryszczak.service.conversation;
 
-import net.dv8tion.jda.api.entities.Member;
+import java.io.File;
 
 public sealed interface ConversationService permits ChatGptConversationService {
     void replay(byte[] audioData);
+    void replay(File audioFile);
 }

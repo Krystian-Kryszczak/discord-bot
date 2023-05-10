@@ -3,12 +3,18 @@ package krystian.kryszczak.model.audio.receiver;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.service.conversation.ConversationService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.UserAudio;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.*;
+import java.security.SecureRandom;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,15 +26,13 @@ import java.util.concurrent.TimeUnit;
 public final class ConversationAudioReceiver implements AudioReceiveHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
+    private static final long AWAIT_TIME_MILLIS = 1500;
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
     private int bytesCount = 0;
-    private long latestTime = 0;
 
-    private static final long AWAIT_TIME_MILLIS = 500;
-    private static final Executor executor = CompletableFuture.delayedExecutor((int) (AWAIT_TIME_MILLIS * 1.1), TimeUnit.MILLISECONDS);
-    private static boolean watcherActive = false;
-    private static boolean listening = true;
+    private final Executor executor = CompletableFuture.delayedExecutor(AWAIT_TIME_MILLIS, TimeUnit.MILLISECONDS);
+    private boolean listening = true;
 
     @Override
     public boolean canReceiveUser() {
@@ -37,58 +41,47 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
 
     @Override
     public void handleUserAudio(@NotNull UserAudio userAudio) {
-        long start = System.currentTimeMillis();
-
         try {
             byte[] data = userAudio.getAudioData(1.0f);
 
             queue.add(data);
             bytesCount += data.length;
 
-            activateWatcher(start);
-
-            latestTime = start;
+            activateListener();
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
     }
 
-    private void activateWatcher(long startTime) {
-        if (watcherActive) return;
-        watcherActive = true;
-        logger.info("Activated Watcher.");
+    private void activateListener() {
+        if (listening) return;
+
         CompletableFuture.runAsync(() -> {
-            logger.info("Watcher Call");
-
-            logger.info("");
-            logger.info("latestTime: " + latestTime);
-            logger.info("startTime: " + startTime);
-            logger.info("startTime - latestTime: " + (latestTime - startTime));
-            logger.info("AWAIT_TIME_MILLIS: " + AWAIT_TIME_MILLIS);
-            logger.info("latestTime > 0: " + (latestTime > 0 ));
-            logger.info("startTime - latestTime > AWAIT_TIME_MILLI: " + (latestTime - startTime > AWAIT_TIME_MILLIS));
-            logger.info("");
-
-            if (latestTime > 0 && latestTime - startTime > AWAIT_TIME_MILLIS) {
-                logger.info("Watcher before replay.");
-                conversationService.replay(collectQueueData());
-                logger.info("Watcher after replay.");
-                watcherActive = false;
-                logger.info("Watcher reset.");
-            }
+            replay();
+            listening = false;
         }, executor);
     }
 
-    private byte[] collectQueueData() {
-        final byte[] result = new byte[bytesCount];
+    private void replay() {
+        conversationService.replay(collectQueueData());
+        logger.info("Replayed.");
+    }
+
+    @SneakyThrows
+    private File collectQueueData() {
+        final byte[] data = new byte[bytesCount];
         int i = 0;
         for (final byte[] bytes : queue) {
             for (final byte e : bytes) {
-                result[i] = e;
+                data[i] = e;
                 i++;
             }
         }
         queue.clear();
-        return result;
+        final var audioInputStream = new AudioInputStream(new ByteArrayInputStream(data), OUTPUT_FORMAT, data.length);
+        final var output = new File("storage/receiver", "discord-" + new SecureRandom().nextInt());
+        AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, output);
+
+        return output;
     }
 }
