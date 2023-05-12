@@ -1,4 +1,4 @@
-package krystian.kryszczak.model.audio.provider;
+package krystian.kryszczak.audio.provider;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;

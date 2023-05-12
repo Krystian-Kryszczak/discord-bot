@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 public final class SpeechRecognitionServiceTest {
@@ -24,6 +23,7 @@ public final class SpeechRecognitionServiceTest {
             .recognizeSpeech(file)
             .blockingGet();
 
+        assertNotNull(transcription);
         assertFalse(transcription.isBlank());
         assertTrue("Hello world!".length() < transcription.length());
         assertTrue("Hello world!".length() + 3 > transcription.length());

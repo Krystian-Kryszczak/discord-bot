@@ -3,7 +3,7 @@ package krystian.kryszczak.command;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.model.audio.provider.LavaPlayerAudioProvider;
+import krystian.kryszczak.audio.provider.LavaPlayerAudioProvider;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;

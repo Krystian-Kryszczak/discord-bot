@@ -1,4 +1,4 @@
-package krystian.kryszczak.model.audio.scheduler;
+package krystian.kryszczak.audio.scheduler;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;

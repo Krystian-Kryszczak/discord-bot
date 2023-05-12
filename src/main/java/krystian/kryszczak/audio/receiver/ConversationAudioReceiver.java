@@ -1,4 +1,4 @@
-package krystian.kryszczak.model.audio.receiver;
+package krystian.kryszczak.audio.receiver;
 
 import jakarta.inject.Singleton;
 import krystian.kryszczak.service.conversation.ConversationService;
@@ -26,13 +26,13 @@ import java.util.concurrent.TimeUnit;
 public final class ConversationAudioReceiver implements AudioReceiveHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
-    private static final long AWAIT_TIME_MILLIS = 1500;
+    private static final long AWAIT_TIME_MILLIS = 2500;
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
     private int bytesCount = 0;
 
     private final Executor executor = CompletableFuture.delayedExecutor(AWAIT_TIME_MILLIS, TimeUnit.MILLISECONDS);
-    private boolean listening = true;
+    private boolean listening = false;
 
     @Override
     public boolean canReceiveUser() {
@@ -55,6 +55,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
 
     private void activateListener() {
         if (listening) return;
+        listening = true;
 
         CompletableFuture.runAsync(() -> {
             replay();
