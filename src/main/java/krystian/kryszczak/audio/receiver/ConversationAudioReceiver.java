@@ -7,14 +7,11 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.UserAudio;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
-import java.security.SecureRandom;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -24,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 @RequiredArgsConstructor
 public final class ConversationAudioReceiver implements AudioReceiveHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
     private static final long AWAIT_TIME_MILLIS = 2500;
 
@@ -65,7 +61,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
     }
 
     @SneakyThrows
-    private File collectQueueData() {
+    private byte[] collectQueueData() {
         final byte[] data = new byte[bytesCount];
         int i = 0;
         for (final byte[] bytes : queue) {
@@ -75,10 +71,11 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
             }
         }
         queue.clear();
+
         final var audioInputStream = new AudioInputStream(new ByteArrayInputStream(data), OUTPUT_FORMAT, data.length);
-        final var output = new File("storage/receiver", "discord-" + new SecureRandom().nextInt() + ".wav");
+        final var output = new ByteArrayOutputStream();
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, output);
 
-        return output;
+        return output.toByteArray();
     }
 }

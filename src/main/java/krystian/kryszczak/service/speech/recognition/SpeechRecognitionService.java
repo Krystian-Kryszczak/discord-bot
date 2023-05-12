@@ -6,5 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 public sealed interface SpeechRecognitionService permits OpenAiSpeechRecognitionService {
-    Maybe<String> recognizeSpeech(final @NotNull File file);
+    Maybe<String> recognizeSpeech(final byte @NotNull [] wavAudioData);
+    Maybe<String> recognizeSpeech(final @NotNull File wavFile);
 }

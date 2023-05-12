@@ -1,5 +1,6 @@
 package krystian.kryszczak.service.speech.recognition;
 
+import io.micronaut.http.MediaType;
 import io.micronaut.http.client.multipart.MultipartBody;
 import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Singleton;
@@ -23,10 +24,24 @@ public final class OpenAiSpeechRecognitionService implements SpeechRecognitionSe
 
     @SneakyThrows
     @Override
-    public Maybe<String> recognizeSpeech(final @NotNull File file) {
+    public Maybe<String> recognizeSpeech(final byte @NotNull [] wavAudioData) {
         return httpClient.createTranscription(
                 MultipartBody.builder()
-                    .addPart("file", file)
+                    .addPart("file", "audio.wav", MediaType.of("audio/wav"), wavAudioData)
+                    .addPart("model", configuration.getAudioModel())
+                    .addPart("language", configuration.getLanguage())
+                    .addPart("response_format", "text")
+                    .build()
+            ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete();
+    }
+
+    @SneakyThrows
+    @Override
+    public Maybe<String> recognizeSpeech(final @NotNull File wavFile) {
+        return httpClient.createTranscription(
+                MultipartBody.builder()
+                    .addPart("file", wavFile)
                     .addPart("model", configuration.getAudioModel())
                     .addPart("language", configuration.getLanguage())
                     .addPart("response_format", "text")

@@ -23,22 +23,22 @@ public final class ChatGptConversationService implements ConversationService {
     private final AudioPlayerManager audioPlayerManager;
     private final TrackScheduler scheduler;
 
-//    @Override
-//    public void replay(byte[] audioData) {
-//        speechRecognitionService.recognizeSpeech(audioData)
-//            .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
-//            .flatMapSingle(chatService::replay)
-//            .doAfterSuccess(it -> logger.info("Replay: " + it))
-//            .flatMapSingle(textToSpeechService::textToSpeechBufferedFile)
-//            .doAfterSuccess(it -> logger.info("File with voice response: " + it.getAbsolutePath()))
-//            .map(File::getAbsolutePath)
-//            .doAfterSuccess(it -> audioPlayerManager.loadItem(it, scheduler))
-//            .subscribe();
-//    }
+    @Override
+    public void replay(byte[] audioData) {
+        speechRecognitionService.recognizeSpeech(audioData)
+            .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
+            .flatMapSingle(chatService::replay)
+            .doAfterSuccess(it -> logger.info("Replay: " + it))
+            .flatMapSingle(textToSpeechService::textToSpeechBufferedFile)
+            .doAfterSuccess(it -> logger.info("File with voice response: " + it.getAbsolutePath()))
+            .map(File::getAbsolutePath)
+            .doAfterSuccess(it -> audioPlayerManager.loadItem(it, scheduler))
+            .subscribe();
+    }
 
     @Override
-    public void replay(File audioFile) {
-        speechRecognitionService.recognizeSpeech(audioFile)
+    public void replay(File wavAudioFile) {
+        speechRecognitionService.recognizeSpeech(wavAudioFile)
             .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
             .flatMapSingle(chatService::replay)
             .doAfterSuccess(it -> logger.info("Replay: " + it))
