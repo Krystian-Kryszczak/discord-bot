@@ -58,14 +58,10 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
         listening = true;
 
         CompletableFuture.runAsync(() -> {
-            replay();
-            listening = false;
+            conversationService.replay(collectQueueData());
+            CompletableFuture
+                .runAsync(() -> listening = false);
         }, executor);
-    }
-
-    private void replay() {
-        conversationService.replay(collectQueueData());
-        logger.info("Replayed.");
     }
 
     @SneakyThrows
@@ -80,7 +76,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
         }
         queue.clear();
         final var audioInputStream = new AudioInputStream(new ByteArrayInputStream(data), OUTPUT_FORMAT, data.length);
-        final var output = new File("storage/receiver", "discord-" + new SecureRandom().nextInt());
+        final var output = new File("storage/receiver", "discord-" + new SecureRandom().nextInt() + ".wav");
         AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, output);
 
         return output;

@@ -28,6 +28,7 @@ public final class OpenAiSpeechRecognitionService implements SpeechRecognitionSe
                 MultipartBody.builder()
                     .addPart("file", file)
                     .addPart("model", configuration.getAudioModel())
+                    .addPart("language", configuration.getLanguage())
                     .addPart("response_format", "text")
                     .build()
             ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))

@@ -18,6 +18,7 @@ public final class OpenAiConfigurationTest {
         items.put("open-ai.token", "sk-test-token");
         items.put("open-ai.gpt-model", "gpt-3.5-turbo");
         items.put("open-ai.audio-model", "whisper-1");
+        items.put("open-ai.language", "pl");
 
         ApplicationContext ctx = ApplicationContext.run(items);
         OpenAiConfiguration openAiConfiguration = ctx.getBean(OpenAiConfiguration.class);
@@ -25,10 +26,12 @@ public final class OpenAiConfigurationTest {
         String token = openAiConfiguration.getToken();
         String gptModel = openAiConfiguration.getGptModel();
         String audioModel = openAiConfiguration.getAudioModel();
+        String language = openAiConfiguration.getLanguage();
 
         assertEquals("sk-test-token", token);
         assertEquals("gpt-3.5-turbo", gptModel);
         assertEquals("whisper-1", audioModel);
+        assertEquals("pl", language);
 
         ctx.close();
     }

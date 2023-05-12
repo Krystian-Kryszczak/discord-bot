@@ -9,4 +9,5 @@ public class OpenAiConfiguration {
     private String token;
     private String gptModel;
     private String audioModel;
+    private String language;
 }
