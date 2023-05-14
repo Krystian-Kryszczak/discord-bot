@@ -3,8 +3,8 @@ package krystian.kryszczak.command;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.audio.provider.LavaPlayerAudioProvider;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.Channel;
@@ -16,10 +16,10 @@ import java.util.Optional;
 
 @Singleton
 public final class TalkCommand extends Command {
-    private final LavaPlayerAudioProvider provider;
+    private final AudioSendHandler provider;
     private final AudioReceiveHandler receiver;
 
-    TalkCommand(final LavaPlayerAudioProvider provider, final AudioReceiveHandler receiver) {
+    TalkCommand(final AudioSendHandler provider, final AudioReceiveHandler receiver) {
         super("talk", "Start a conversation with AiBot.", new OptionData[0]);
         this.provider = provider;
         this.receiver = receiver;

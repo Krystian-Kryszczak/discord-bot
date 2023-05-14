@@ -16,7 +16,7 @@ public final class TextToSpeechServiceTest {
 
     @Test
     void testTextToSpeech() {
-        final File file = textToSpeechService.textToSpeechBufferedFile("Hello world!")
+        final File file = textToSpeechService.textToSpeech("Hello world!")
             .blockingGet();
 
         assertNotNull(file);

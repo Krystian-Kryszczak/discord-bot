@@ -48,5 +48,4 @@ target/
 .idea
 
 storage/*
-storage/receiver/*
-storage/provider/*
+storage/content/*

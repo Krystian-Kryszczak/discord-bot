@@ -13,7 +13,6 @@ public final class ElevenLabsConfiguration {
     private String token;
     private String defaultVoiceId;
     private String defaultModelId;
-    private String defaultSaveFolder;
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "default-voice-settings")
     VoiceSettings.Builder builder = VoiceSettings.builder();

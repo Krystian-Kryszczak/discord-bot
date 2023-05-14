@@ -1,9 +1,8 @@
 package krystian.kryszczak.service.conversation;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.audio.scheduler.TrackScheduler;
 import krystian.kryszczak.service.chat.ChatService;
+import krystian.kryszczak.service.provider.BotAudioProviderService;
 import krystian.kryszczak.service.speech.recognition.SpeechRecognitionService;
 import krystian.kryszczak.service.speech.text.TextToSpeechService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,7 @@ public final class ChatGptConversationService implements ConversationService {
     private final SpeechRecognitionService speechRecognitionService;
     private final ChatService chatService;
     private final TextToSpeechService textToSpeechService;
-    private final AudioPlayerManager audioPlayerManager;
-    private final TrackScheduler scheduler;
+    private final BotAudioProviderService botAudioProviderService;
 
     @Override
     public void replay(byte[] audioData) {
@@ -29,10 +27,10 @@ public final class ChatGptConversationService implements ConversationService {
             .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
             .flatMapSingle(chatService::replay)
             .doAfterSuccess(it -> logger.info("Replay: " + it))
-            .flatMapSingle(textToSpeechService::textToSpeechBufferedFile)
-            .doAfterSuccess(it -> logger.info("File with voice response: " + it.getAbsolutePath()))
-            .map(File::getAbsolutePath)
-            .doAfterSuccess(it -> audioPlayerManager.loadItem(it, scheduler))
+            .flatMapSingle(textToSpeechService::textToSpeech)
+            .doAfterSuccess(botAudioProviderService::loadItem)
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete()
             .subscribe();
     }
 
@@ -42,10 +40,10 @@ public final class ChatGptConversationService implements ConversationService {
             .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
             .flatMapSingle(chatService::replay)
             .doAfterSuccess(it -> logger.info("Replay: " + it))
-            .flatMapSingle(textToSpeechService::textToSpeechBufferedFile)
-            .doAfterSuccess(it -> logger.info("File with voice response: " + it.getAbsolutePath()))
-            .map(File::getAbsolutePath)
-            .doAfterSuccess(it -> audioPlayerManager.loadItem(it, scheduler))
+            .flatMapSingle(textToSpeechService::textToSpeech)
+            .doAfterSuccess(botAudioProviderService::loadItem)
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete()
             .subscribe();
     }
 }

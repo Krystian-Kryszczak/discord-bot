@@ -1,9 +1,8 @@
 package krystian.kryszczak.command;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Singleton;
-import krystian.kryszczak.audio.scheduler.TrackScheduler;
+import krystian.kryszczak.service.provider.BotAudioProviderService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -15,22 +14,20 @@ import java.util.Optional;
 public final class PlayCommand extends Command {
     private static final String URL = "url";
 
-    private final AudioPlayerManager playerManager;
-    private final TrackScheduler scheduler;
+    private final BotAudioProviderService botAudioProviderService;
 
-    PlayCommand(final AudioPlayerManager playerManager, final TrackScheduler scheduler) {
+    PlayCommand(final BotAudioProviderService botAudioProviderService) {
         super("play", "Play music from YouTube.", new OptionData[] {
             new OptionData(OptionType.STRING, URL, "Url to YouTube video.").setRequired(true)
         });
-        this.playerManager = playerManager;
-        this.scheduler = scheduler;
+        this.botAudioProviderService = botAudioProviderService;
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         Maybe.fromOptional(Optional.ofNullable(event.getOption(URL)))
             .map(OptionMapping::getAsString)
-            .doAfterSuccess(url -> playerManager.loadItem(url, scheduler))
+            .doAfterSuccess(botAudioProviderService::loadItem)
             .map(url -> "I'm playing: " + url)
             .onErrorReturn(throwable -> "Error: " + throwable.getMessage())
             .defaultIfEmpty("You must define valid youtube video url!")
