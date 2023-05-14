@@ -3,22 +3,18 @@ package krystian.kryszczak.configuration.discord;
 import io.micronaut.context.ApplicationContext;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class DiscordConfigurationTest {
     @Test
     void testDiscordConfiguration() {
-        final Map<String, Object> items = new HashMap<>();
-        items.put("discord.token", "test-token");
-
-        ApplicationContext ctx = ApplicationContext.run(items);
+        ApplicationContext ctx = ApplicationContext.run();
         DiscordConfiguration discordConfiguration = ctx.getBean(DiscordConfiguration.class);
+        final String token = discordConfiguration.getToken();
 
-        assertEquals("test-token", discordConfiguration.getToken());
-
+        assertNotNull(token);
+        assertFalse(token.isBlank());
+        assertEquals(72, token.length());
         ctx.close();
     }
 }
