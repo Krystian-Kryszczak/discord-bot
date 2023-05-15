@@ -1,6 +1,7 @@
 package krystian.kryszczak.audio.receiver;
 
 import jakarta.inject.Singleton;
+import krystian.kryszczak.configuration.discord.DiscordConfiguration;
 import krystian.kryszczak.service.conversation.ConversationService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,15 +20,18 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-@RequiredArgsConstructor
 public final class ConversationAudioReceiver implements AudioReceiveHandler {
     private final ConversationService conversationService;
-    private static final long AWAIT_TIME_MILLIS = 2500;
+
+    public ConversationAudioReceiver(ConversationService conversationService, DiscordConfiguration configuration) {
+        this.conversationService = conversationService;
+        this.executor = CompletableFuture.delayedExecutor(configuration.getAudioReceiverAwaitTimeMillis(), TimeUnit.MILLISECONDS);
+    }
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
     private int bytesCount = 0;
 
-    private final Executor executor = CompletableFuture.delayedExecutor(AWAIT_TIME_MILLIS, TimeUnit.MILLISECONDS);
+    private final Executor executor;
     private boolean listening = false;
 
     @Override

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @ConfigurationProperties("discord")
-public class DiscordConfiguration {
+public final class DiscordConfiguration {
     private String token;
+    private Long audioReceiverAwaitTimeMillis;
 }
