@@ -5,8 +5,10 @@ micronaut:
     services:
       eleven-labs:
         url: https://api.elevenlabs.io
+        read-timeout: 60s
       open-ai:
         url: https://api.openai.com
+        read-timeout: 30s
   caches:
     headlines:
       charset: 'UTF-8'
