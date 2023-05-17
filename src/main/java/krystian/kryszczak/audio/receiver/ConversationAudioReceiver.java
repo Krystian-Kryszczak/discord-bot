@@ -3,11 +3,12 @@ package krystian.kryszczak.audio.receiver;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.configuration.discord.DiscordConfiguration;
 import krystian.kryszczak.service.conversation.ConversationService;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.UserAudio;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -21,11 +22,17 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 public final class ConversationAudioReceiver implements AudioReceiveHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
 
     public ConversationAudioReceiver(ConversationService conversationService, DiscordConfiguration configuration) {
         this.conversationService = conversationService;
-        this.executor = CompletableFuture.delayedExecutor(configuration.getAudioReceiverAwaitTimeMillis(), TimeUnit.MILLISECONDS);
+
+        final var awaitTimeMillis = configuration.getAudioReceiverAwaitTimeMillis();
+        final TimeUnit unit = TimeUnit.MILLISECONDS;
+
+        this.executor = CompletableFuture.delayedExecutor(awaitTimeMillis, unit);
+        logger.info("Created a delayed executor with a delay of " + awaitTimeMillis + " " + TimeUnit.MILLISECONDS.name().toLowerCase() + ".");
     }
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();

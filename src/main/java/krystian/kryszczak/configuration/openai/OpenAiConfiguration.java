@@ -3,6 +3,8 @@ package krystian.kryszczak.configuration.openai;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import lombok.Data;
 
+import java.time.Duration;
+
 @Data
 @ConfigurationProperties("open-ai")
 public class OpenAiConfiguration {
@@ -10,4 +12,5 @@ public class OpenAiConfiguration {
     private String gptModel;
     private String audioModel;
     private String language;
+    private Duration defaultTimeout;
 }

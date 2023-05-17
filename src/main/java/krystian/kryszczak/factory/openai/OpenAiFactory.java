@@ -10,6 +10,6 @@ public final class OpenAiFactory {
 
     @Singleton
     public OpenAiService openAiService(OpenAiConfiguration openAiConfiguration) {
-        return new OpenAiService(openAiConfiguration.getToken());
+        return new OpenAiService(openAiConfiguration.getToken(), openAiConfiguration.getDefaultTimeout());
     }
 }

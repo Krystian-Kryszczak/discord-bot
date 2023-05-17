@@ -24,7 +24,7 @@ public final class ChatGptConversationService implements ConversationService {
     @Override
     public void replay(byte[] audioData) {
         speechRecognitionService.recognizeSpeech(audioData)
-            .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
+            .doOnSuccess(it -> logger.info("Recognized speech: " + it))
             .flatMapSingle(chatService::replay)
             .doAfterSuccess(it -> logger.info("Replay: " + it))
             .flatMapSingle(textToSpeechService::textToSpeech)
@@ -37,7 +37,7 @@ public final class ChatGptConversationService implements ConversationService {
     @Override
     public void replay(File wavAudioFile) {
         speechRecognitionService.recognizeSpeech(wavAudioFile)
-            .doAfterSuccess(it -> logger.info("Recognized speech: " + it))
+            .doOnSuccess(it -> logger.info("Recognized speech: " + it))
             .flatMapSingle(chatService::replay)
             .doAfterSuccess(it -> logger.info("Replay: " + it))
             .flatMapSingle(textToSpeechService::textToSpeech)

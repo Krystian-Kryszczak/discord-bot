@@ -8,7 +8,7 @@ micronaut:
         read-timeout: 60s
       open-ai:
         url: https://api.openai.com
-        read-timeout: 30s
+        read-timeout: 60s
   caches:
     headlines:
       charset: 'UTF-8'
@@ -23,6 +23,8 @@ open-ai:
   token: ${OPEN_AI_TOKEN}
   gpt-model: ${$OPEN_AI_GPT_MODEL:gpt-3.5-turbo}
   audio-model: ${$OPEN_AI_AUDIO_MODEL:whisper-1}
+  language: pl
+  default-timeout: 60s
 eleven-labs:
   token: ${ELEVENLABS_API_KEY}
   default-voice-id: TxGEqnHWrfWFTfGW9XjX
