@@ -36,8 +36,8 @@ public final class TextToSpeechTest {
               "text": "string",
               "model_id": "eleven_monolingual_v1",
               "voice_settings": {
-                "stability": 0,
-                "similarity_boost": 0
+                "stability": 0.0,
+                "similarity_boost": 0.0
               }
             }
             """

@@ -17,5 +17,4 @@ class DiscordBotTest {
     void testItWorks() {
         Assertions.assertTrue(application.isRunning());
     }
-
 }
