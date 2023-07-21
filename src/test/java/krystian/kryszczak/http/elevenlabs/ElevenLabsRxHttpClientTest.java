@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
-public final class ElevenlabsRxHttpClientTest {
+public final class ElevenLabsRxHttpClientTest {
     @Inject
     private ElevenLabsRxHttpClient httpClient;
     @Inject
