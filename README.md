@@ -1,5 +1,6 @@
 ## Discord AI-Bot
-> It is a bot for discord that can be spoken to.<br>
+![CodeQL](https://github.com/Krystian-Kryszczak/discord-bot/workflows/CodeQL/badge.svg)
+> This is a bot for Discord that you can talk to.<br>
 This process is done sequentially through speech recognition using the Whisper model,<br>
 then the result is sent to the GPT language model from OpenAI.<br>
 The resulting response is converted into sound, via an API from ElevenLabs,<br>
