@@ -26,7 +26,7 @@ open-ai:
   language: pl
   default-timeout: 60s
 eleven-labs:
-  token: ${ELEVENLABS_API_KEY}
+  token: ${ELEVEN_LABS_API_KEY}
   default-voice-id: TxGEqnHWrfWFTfGW9XjX
   default-model-id: eleven_multilingual_v1
   default-voice-settings:
