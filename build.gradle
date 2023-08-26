@@ -3,7 +3,7 @@ plugins {
     id("io.micronaut.application") version "3.7.9"
 }
 
-version = "1.0"
+version = "1.0.0"
 group = "krystian.kryszczak"
 
 repositories {
@@ -37,6 +37,14 @@ application {
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
+}
+tasks {
+    dockerBuild {
+        images = ["${System.env.DOCKER_IMAGE ?: project.name}:$project.version", "${System.env.DOCKER_IMAGE ?: project.name}"]
+    }
+    dockerBuildNative {
+        images = ["${System.env.DOCKER_IMAGE ?: project.name}:$project.version", "${System.env.DOCKER_IMAGE ?: project.name}"]
+    }
 }
 
 micronaut {
