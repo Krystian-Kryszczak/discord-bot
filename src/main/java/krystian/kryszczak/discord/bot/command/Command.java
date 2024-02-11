@@ -1,16 +1,17 @@
 package krystian.kryszczak.discord.bot.command;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public abstract class Command {
     private final String name;
     private final String description;
@@ -24,5 +25,5 @@ public abstract class Command {
 
     public static final Map<String, Command> commands = new HashMap<>();
 
-    public abstract void execute(SlashCommandInteractionEvent event);
+    public abstract void execute(final @NotNull SlashCommandInteractionEvent event);
 }

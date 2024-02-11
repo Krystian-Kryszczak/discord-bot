@@ -1,7 +1,5 @@
 package krystian.kryszczak.discord.bot.command;
 
-import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
@@ -11,11 +9,15 @@ import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 @Singleton
 public final class TalkCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(TalkCommand.class);
+
     private final AudioSendHandler provider;
     private final AudioReceiveHandler receiver;
 
@@ -26,22 +28,22 @@ public final class TalkCommand extends Command {
     }
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) {
-        Maybe.fromOptional(Optional.ofNullable(event.getGuild()))
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
+        Mono.justOrEmpty(event.getGuild())
             .flatMap(guild -> {
                 final Member member = event.getMember();
                 if (member == null) {
-                    return Maybe.empty();
+                    return Mono.empty();
                 }
 
                 final GuildVoiceState voiceState = member.getVoiceState();
                 if (voiceState == null) {
-                    return Maybe.empty();
+                    return Mono.empty();
                 }
 
                 final AudioChannelUnion channel = voiceState.getChannel();
                 if (channel == null) {
-                    return Maybe.empty();
+                    return Mono.empty();
                 }
 
                 final var audioManager = guild.getAudioManager();
@@ -50,14 +52,14 @@ public final class TalkCommand extends Command {
                 audioManager.setReceivingHandler(receiver);
                 audioManager.openAudioConnection(channel);
 
-                return Maybe.just(channel);
+                return Mono.just(channel);
             })
             .map(Channel::getName)
             .map(channelName -> "We will talk on the channel \"" + channelName + "\".")
             .doOnError(Throwable::printStackTrace)
-            .onErrorReturn(throwable -> "Error: " + throwable.getMessage())
-            .switchIfEmpty(Single.just("You must be connected to voice channel!"))
-            .doAfterSuccess(it -> event.reply(it).setEphemeral(true).queue())
+            .doOnError(throwable -> logger.error("Error: {}", throwable.getMessage()))
+            .defaultIfEmpty("You must be connected to voice channel!")
+            .doOnSuccess(it -> event.reply(it).setEphemeral(true).queue())
             .subscribe();
     }
 }

@@ -1,6 +1,5 @@
 package krystian.kryszczak.discord.bot.command;
 
-import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.service.provider.BotAudioProviderService;
 import krystian.kryszczak.discord.bot.service.speech.text.TextToSpeechService;
@@ -8,8 +7,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
@@ -30,21 +31,20 @@ public final class SayCommand extends Command {
     }
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) {
-        Maybe.just(Objects.requireNonNull(event.getOption(ARG_NAME)))
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
+        Mono.just(Objects.requireNonNull(event.getOption(ARG_NAME)))
             .onErrorComplete()
             .map(OptionMapping::getAsString)
             .filter(phrase -> !phrase.isBlank())
             .doOnSuccess(
                 phrase -> textToSpeechService.textToSpeech(phrase)
-                .doAfterSuccess(botAudioProviderService::loadItem)
+                .doOnSuccess(botAudioProviderService::loadItem)
                 .subscribe()
-            )
-            .map(phrase -> "I saying: \"" + phrase + "\"")
+            ).map(phrase -> "I saying: \"" + phrase + "\"")
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
-            .onErrorReturnItem("Error")
+            .onErrorReturn("Error")
             .defaultIfEmpty("You must define valid phrase to say for me!")
-            .doAfterSuccess(it -> event.reply(it).setEphemeral(true).queue())
+            .doOnSuccess(it -> event.reply(it).setEphemeral(true).queue())
             .subscribe();
     }
 }
