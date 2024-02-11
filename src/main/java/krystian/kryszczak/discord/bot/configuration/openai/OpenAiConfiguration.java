@@ -7,7 +7,7 @@ import java.time.Duration;
 
 @Data
 @ConfigurationProperties("open-ai")
-public class OpenAiConfiguration {
+public final class OpenAiConfiguration {
     private String token;
     private String gptModel;
     private String audioModel;
