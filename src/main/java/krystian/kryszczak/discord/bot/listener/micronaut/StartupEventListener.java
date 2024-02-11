@@ -6,7 +6,7 @@ import io.micronaut.inject.BeanDefinition;
 import io.micronaut.runtime.event.annotation.EventListener;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.command.Command;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-@AllArgsConstructor
+@RequiredArgsConstructor
 public final class StartupEventListener {
     private static final Logger logger = LoggerFactory.getLogger(StartupEventListener.class);
 
