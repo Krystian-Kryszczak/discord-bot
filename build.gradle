@@ -1,6 +1,7 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.7.9"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.3.2"
+    id("io.micronaut.aot") version "4.3.2"
 }
 
 version = "1.0.0"
@@ -12,28 +13,31 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    implementation("io.micronaut.cache:micronaut-cache-core")
-    implementation("io.micronaut.cache:micronaut-cache-caffeine")
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.rxjava3:micronaut-rxjava3")
-    implementation("io.micronaut.rxjava3:micronaut-rxjava3-http-client")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micrometer:context-propagation")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("jakarta.annotation:jakarta.annotation-api")
-    compileOnly("org.projectlombok:lombok")
-
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
+    testImplementation("io.micronaut:micronaut-http-client")
 
-    compileOnly("org.jetbrains:annotations:24.0.1")
-
-    implementation("com.theokanning.openai-gpt3-java:service:0.12.0")
-
-    implementation("com.sedmelluq:lavaplayer:1.3.78")
-    implementation("net.dv8tion:JDA:5.0.0-beta.20")
-
+    annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
 
+    compileOnly("org.jetbrains:annotations:24.0.1")
+    runtimeOnly("ch.qos.logback:logback-classic")
+
+    implementation("com.theokanning.openai-gpt3-java:service:0.12.0")
+    implementation("com.sedmelluq:lavaplayer:1.3.78")
+    implementation("net.dv8tion:JDA:5.0.0-beta.20")
+
+    testImplementation("org.mockito:mockito-core:5.10.0")
     testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-13")
 }
 
@@ -44,6 +48,7 @@ java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
 }
+
 tasks {
     dockerBuild {
         images = ["${System.env.DOCKER_IMAGE ?: project.name}:$project.version", "${System.env.DOCKER_IMAGE ?: project.name}"]
@@ -53,11 +58,21 @@ tasks {
     }
 }
 
+graalvmNative.toolchainDetection = false
 micronaut {
     runtime("netty")
     testRuntime("junit5")
     processing {
         incremental(true)
         annotations("krystian.kryszczak.discord.bot.*")
+    }
+    aot {
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
     }
 }

@@ -1,6 +1,6 @@
 applicationType: default
-defaultPackage: krystian.kryszczak
+defaultPackage: krystian.kryszczak.discord.bot
 testFramework: junit
 sourceLanguage: java
 buildTool: gradle
-features: [annotation-api, app-name, graalvm, gradle, http-client, jackson-databind, java, java-application, junit, logback, lombok, micronaut-build, netty, properties, readme, rxjava3, rxjava3-http-client, shade, yaml]
+features: [annotation-api, app-name, graalvm, gradle, http-client, jackson-databind, java, java-application, junit, logback, lombok, micronaut-aot, micronaut-build, netty, properties, reactor, reactor-http-client, readme, shade, static-resources, yaml]
