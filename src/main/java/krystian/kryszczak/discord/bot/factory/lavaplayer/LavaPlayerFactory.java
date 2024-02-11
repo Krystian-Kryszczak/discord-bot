@@ -8,12 +8,12 @@ import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer;
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 @Factory
 public final class LavaPlayerFactory {
-
     @Singleton
-    public AudioPlayerManager audioPlayerManager() {
+    public @NotNull AudioPlayerManager audioPlayerManager() {
         final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
         playerManager.getConfiguration()
@@ -27,7 +27,7 @@ public final class LavaPlayerFactory {
     }
 
     @Singleton
-    public AudioPlayer audioPlayer(final AudioPlayerManager playerManager) {
+    public AudioPlayer audioPlayer(final @NotNull AudioPlayerManager playerManager) {
         return playerManager.createPlayer();
     }
 }
