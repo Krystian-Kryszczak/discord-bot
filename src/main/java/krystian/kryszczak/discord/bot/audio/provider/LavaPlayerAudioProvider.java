@@ -5,6 +5,8 @@ import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -20,8 +22,9 @@ public final class LavaPlayerAudioProvider implements AudioSendHandler {
         return lastFrame != null;
     }
 
+    @Contract(" -> new")
     @Override
-    public ByteBuffer provide20MsAudio() {
+    public @NotNull ByteBuffer provide20MsAudio() {
         return ByteBuffer.wrap(lastFrame.getData());
     }
 

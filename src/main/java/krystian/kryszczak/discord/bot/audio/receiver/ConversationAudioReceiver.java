@@ -25,7 +25,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConversationAudioReceiver.class);
     private final ConversationService conversationService;
 
-    public ConversationAudioReceiver(ConversationService conversationService, DiscordConfiguration configuration) {
+    public ConversationAudioReceiver(ConversationService conversationService, @NotNull DiscordConfiguration configuration) {
         this.conversationService = conversationService;
 
         final var awaitTimeMillis = configuration.getAudioReceiverAwaitTimeMillis();
@@ -56,7 +56,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
 
             activateListener();
         } catch (OutOfMemoryError e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -72,7 +72,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
     }
 
     @SneakyThrows
-    private byte[] collectQueueData() {
+    private byte @NotNull [] collectQueueData() {
         final byte[] data = new byte[bytesCount];
         int i = 0;
         for (final byte[] bytes : queue) {

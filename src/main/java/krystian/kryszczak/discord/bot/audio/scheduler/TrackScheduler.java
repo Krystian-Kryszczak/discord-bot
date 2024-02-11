@@ -6,10 +6,11 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.inject.Singleton;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
-@AllArgsConstructor
+@RequiredArgsConstructor
 public final class TrackScheduler implements AudioLoadResultHandler {
     private final AudioPlayer player;
 
@@ -19,7 +20,7 @@ public final class TrackScheduler implements AudioLoadResultHandler {
     }
 
     @Override
-    public void playlistLoaded(final AudioPlaylist playlist) {
+    public void playlistLoaded(final @NotNull AudioPlaylist playlist) {
         player.playTrack(playlist.getSelectedTrack());
     }
 
