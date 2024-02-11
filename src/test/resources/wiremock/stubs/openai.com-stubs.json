@@ -1,0 +1,75 @@
+{
+  "mappings" : [ {
+    "request" : {
+      "urlPath" : "/v1/audio/transcriptions",
+      "method" : "POST",
+      "headers": {
+        "Content-Type": {
+          "contains": "multipart/form-data"
+        },
+        "Authorization": {
+          "contains": "Bearer"
+        }
+      },
+      "multipartPatterns": [
+        {
+          "matchingType": "ANY",
+          "headers": {
+            "Content-Disposition": {
+              "contains": "name=\"file\""
+            },
+            "Content-Type": {
+              "contains": "audio/"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "not": {
+                "equalTo": ""
+              }
+            }
+          ]
+        },
+        {
+          "matchingType": "ANY",
+          "headers": {
+            "Content-Disposition": {
+              "contains": "name=\"model\""
+            },
+            "Content-Type": {
+              "contains": "text/plain"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "whisper-1"
+            }
+          ]
+        },
+        {
+          "matchingType": "ANY",
+          "headers": {
+            "Content-Disposition": {
+              "contains": "name=\"response_format\""
+            },
+            "Content-Type": {
+              "contains": "text/plain"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "response" : {
+      "status" : 200,
+      "body" : "Hello world!",
+      "headers" : {
+        "Content-Type" : "text/plain"
+      }
+    }
+  } ]
+}
