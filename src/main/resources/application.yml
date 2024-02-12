@@ -28,7 +28,7 @@ open-ai:
 eleven-labs:
   token: ${ELEVEN_LABS_API_KEY}
   default-voice-id: TxGEqnHWrfWFTfGW9XjX
-  default-model-id: eleven_multilingual_v1
+  default-model-id: eleven_multilingual_v2
   default-voice-settings:
     stability: 0.5f
     similarity-boost: 1.0f
