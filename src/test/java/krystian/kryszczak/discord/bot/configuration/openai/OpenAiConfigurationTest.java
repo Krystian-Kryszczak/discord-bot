@@ -1,7 +1,6 @@
 package krystian.kryszczak.discord.bot.configuration.openai;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -10,9 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@MicronautTest
 public final class OpenAiConfigurationTest {
-
     @Test
     public void tokenTest() {
         Map<String, Object> items = new HashMap<>();
