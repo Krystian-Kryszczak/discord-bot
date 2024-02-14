@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-
 @Singleton
 public final class SayCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(SayCommand.class);
@@ -32,19 +30,17 @@ public final class SayCommand extends Command {
 
     @Override
     public void execute(@NotNull SlashCommandInteractionEvent event) {
-        Mono.just(Objects.requireNonNull(event.getOption(ARG_NAME)))
+        Mono.justOrEmpty(event.getOption(ARG_NAME))
             .onErrorComplete()
             .map(OptionMapping::getAsString)
             .filter(phrase -> !phrase.isBlank())
-            .doOnSuccess(
-                phrase -> textToSpeechService.textToSpeech(phrase)
-                .doOnSuccess(botAudioProviderService::loadItem)
-                .subscribe()
-            ).map(phrase -> "I saying: \"" + phrase + "\"")
-            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .doOnNext(phrase -> System.out.println("I saying: \"" + phrase + "\""))
             .onErrorReturn("Error")
             .defaultIfEmpty("You must define valid phrase to say for me!")
-            .doOnSuccess(it -> event.reply(it).setEphemeral(true).queue())
+            .doOnSuccess(it -> event.reply(it).setEphemeral(true).queue()).flux()
+            .flatMap(textToSpeechService::textToSpeech)
+            .doOnNext(botAudioProviderService::loadItem)
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .subscribe();
     }
 }
