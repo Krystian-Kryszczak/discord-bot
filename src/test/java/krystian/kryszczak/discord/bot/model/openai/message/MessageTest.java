@@ -2,6 +2,7 @@ package krystian.kryszczak.discord.bot.model.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import krystian.kryszczak.discord.bot.model.openai.completion.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
