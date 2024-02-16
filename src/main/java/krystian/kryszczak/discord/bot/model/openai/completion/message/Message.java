@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import krystian.kryszczak.discord.bot.model.openai.completion.tool.ToolCall;
 import lombok.Builder;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 @Builder
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -17,4 +20,16 @@ public record Message(
     @Nullable String name,
     @Nullable ToolCall[] toolCalls,
     @Nullable String toolCallId
-) {}
+) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Message other) {
+            return Objects.equals(this.role(), other.role()) &&
+                Objects.equals(this.content(), other.content()) &&
+                Objects.equals(this.name(), other.name()) &&
+                Arrays.equals(this.toolCalls(), other.toolCalls()) &&
+                Objects.equals(this.toolCallId(), other.toolCallId());
+        }
+        return false;
+    }
+}
