@@ -10,25 +10,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @MicronautTest
 public final class TextToSpeechTest {
     @Test
-    public void testVoiceSettingsToJson(@NotNull ObjectMapper objectMapper) {
+    public void textToSpeechSerialization(@NotNull ObjectMapper objectMapper) {
         assertDoesNotThrow(() -> {
-            final String result = objectMapper.writeValueAsString(
+            final String data = objectMapper.writeValueAsString(
                 new TextToSpeech("Hello world!", "TxGEqnHWrfWFTfGW9XjX", new VoiceSettings(0, 0))
             );
 
-            final TextToSpeech textToSpeech = objectMapper.readValue(result, TextToSpeech.class);
+            final TextToSpeech textToSpeech = objectMapper.readValue(data, TextToSpeech.class);
 
-            assertNotNull(result);
-            assertEquals("Hello world!", textToSpeech.getText());
-            assertEquals("TxGEqnHWrfWFTfGW9XjX", textToSpeech.getModelId());
-            assertEquals(new VoiceSettings(0, 0), textToSpeech.getVoiceSettings());
+            assertNotNull(data);
+            assertEquals("Hello world!", textToSpeech.text());
+            assertEquals("TxGEqnHWrfWFTfGW9XjX", textToSpeech.modelId());
+            assertEquals(new VoiceSettings(0, 0), textToSpeech.voiceSettings());
         });
     }
 
     @Test
-    public void testVoiceSettingsToJsonEqualsPattern(@NotNull ObjectMapper objectMapper) {
+    public void textToSpeechSerializationReturnsExceptedPattern(@NotNull ObjectMapper objectMapper) {
         assertDoesNotThrow(() -> {
-            final String result = objectMapper.writeValueAsString(
+            final String data = objectMapper.writeValueAsString(
                 new TextToSpeech("string", "eleven_monolingual_v1", new VoiceSettings(0, 0))
             );
 
@@ -41,12 +41,10 @@ public final class TextToSpeechTest {
                 "similarity_boost": 0.0
               }
             }
-            """
-            .replaceAll("\n", "")
-            .replaceAll(" ", "");
+            """.replaceAll("\n|\\s", "");
 
-            assertNotNull(result);
-            assertEquals(pattern, result);
+            assertNotNull(data);
+            assertEquals(pattern, data);
         });
     }
 }
