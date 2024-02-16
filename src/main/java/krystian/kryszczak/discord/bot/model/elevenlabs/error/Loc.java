@@ -4,4 +4,4 @@ import io.micronaut.core.annotation.Introspected;
 import jakarta.validation.constraints.NotNull;
 
 @Introspected
-public record ElevenLabsError(@NotNull Details detail) {}
+public record Loc(@NotNull String text, int offset) {}

@@ -4,25 +4,21 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
 import jakarta.inject.Singleton;
+import jakarta.validation.constraints.NotNull;
 import krystian.kryszczak.discord.bot.configuration.elevenlabs.ElevenLabsConfiguration;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.jetbrains.annotations.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
 
-@Data
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public final class TextToSpeech {
-    private final @NotNull String text;
-    private final @NotNull String modelId;
-    private final @NotNull VoiceSettings voiceSettings;
-
+public record TextToSpeech(@NotNull String text, @NotNull String modelId, @NotNull VoiceSettings voiceSettings) {
     @Singleton
-    @AllArgsConstructor
+    @RequiredArgsConstructor
     public static final class Factory {
         private final ElevenLabsConfiguration configuration;
 
-        public @NotNull TextToSpeech createWithDefaults(@NotNull String text) {
+        @Contract("_ -> new")
+        public @NotNull @org.jetbrains.annotations.NotNull TextToSpeech createWithDefaults(@NotNull String text) {
             return new TextToSpeech(text, configuration.getDefaultModelId(), configuration.getBuilder().build());
         }
     }
