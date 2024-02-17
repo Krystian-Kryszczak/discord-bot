@@ -13,18 +13,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public final class ReactorElevenLabsHttpClientTest {
     @Test
-    public void testTextToSpeech() {
+    public void textToSpeech() {
         wireMockEnv(context -> {
             final ReactorElevenLabsHttpClient httpClient = context.getBean(ReactorElevenLabsHttpClient.class);
             final TextToSpeech.Factory factory = context.getBean(TextToSpeech.Factory.class);
 
             final Mono<HttpResponse<byte[]>> response = httpClient.textToSpeech(
                 factory.createWithDefaults("Hello world!"));
-            final HttpResponse<byte[]> first = response.block();
-            assertNotNull(first);
-            assertEquals(HttpStatus.OK, first.getStatus());
-            assertTrue(first.getContentType().isPresent());
-            assertEquals("audio/mpeg", first.getContentType().get().toString());
+            final HttpResponse<byte[]> blocked = response.block();
+            assertNotNull(blocked);
+            assertEquals(HttpStatus.OK, blocked.getStatus());
+            assertTrue(blocked.getContentType().isPresent());
+            assertEquals("audio/mpeg", blocked.getContentType().get().toString());
 
             assertDoesNotThrow(() -> {
                 final File file = File.createTempFile("result", ".mpeg");
