@@ -10,7 +10,8 @@
         "xi-api-key": {
           "matches": "^[0-9a-fA-F]{32}$"
         }
-      },"bodyPatterns": [ {
+      },
+      "bodyPatterns": [ {
         "equalToJson": {
           "text": "Hello world!",
           "model_id": "eleven_multilingual_v2",
