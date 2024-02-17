@@ -22,7 +22,9 @@ discord:
 open-ai:
   token: ${OPEN_AI_TOKEN}
   gpt-model: ${$OPEN_AI_GPT_MODEL:gpt-3.5-turbo}
-  audio-model: ${$OPEN_AI_AUDIO_MODEL:whisper-1}
+  transcription-model: ${$OPEN_AI_TRANSCRIPTION_MODEL:whisper-1}
+  speech-model: ${$OPEN_AI_SPEECH_MODEL:tts-1}
+  speech-voice: ${$OPEN_AI_SPEECH_VOICE:alloy}
   language: pl
   default-timeout: 60s
 eleven-labs:

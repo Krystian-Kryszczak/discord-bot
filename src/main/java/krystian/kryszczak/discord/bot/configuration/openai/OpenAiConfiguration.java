@@ -10,7 +10,9 @@ import java.time.Duration;
 public final class OpenAiConfiguration {
     private String token;
     private String gptModel;
-    private String audioModel;
+    private String transcriptionModel;
+    private String speechModel;
+    private String speechVoice;
     private String language;
     private Duration defaultTimeout;
 }
