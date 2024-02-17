@@ -3,7 +3,7 @@ package krystian.kryszczak.discord.bot.service.conversation;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.service.chat.ChatService;
 import krystian.kryszczak.discord.bot.service.provider.BotAudioProviderService;
-import krystian.kryszczak.discord.bot.service.speech.recognition.SpeechRecognitionService;
+import krystian.kryszczak.discord.bot.service.transcription.TranscriptionService;
 import krystian.kryszczak.discord.bot.service.speech.text.TextToSpeechService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,19 +16,19 @@ import java.io.File;
 public final class ChatGptConversationService implements ConversationService {
     private static final Logger logger = LoggerFactory.getLogger(ChatGptConversationService.class);
 
-    private final SpeechRecognitionService speechRecognitionService;
+    private final TranscriptionService transcriptionService;
     private final ChatService chatService;
     private final TextToSpeechService textToSpeechService;
     private final BotAudioProviderService botAudioProviderService;
 
     @Override
     public void replay(byte[] audioData) {
-        speechRecognitionService.recognizeSpeech(audioData)
+        transcriptionService.createTranscription(audioData)
             .doOnSuccess(it -> logger.info("Recognized speech: " + it))
-            .flatMapSingle(chatService::replay)
-            .doAfterSuccess(it -> logger.info("Replay: " + it))
-            .flatMapSingle(textToSpeechService::textToSpeech)
-            .doAfterSuccess(botAudioProviderService::loadItem)
+            .flatMapMany(chatService::createChatCompletion)
+            .doOnNext(it -> logger.info("Replay: " + it))
+            .flatMap(textToSpeechService::textToSpeech)
+            .doOnNext(botAudioProviderService::loadItem)
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete()
             .subscribe();
@@ -36,12 +36,12 @@ public final class ChatGptConversationService implements ConversationService {
 
     @Override
     public void replay(File wavAudioFile) {
-        speechRecognitionService.recognizeSpeech(wavAudioFile)
+        transcriptionService.createTranscription(wavAudioFile)
             .doOnSuccess(it -> logger.info("Recognized speech: " + it))
-            .flatMapSingle(chatService::replay)
-            .doAfterSuccess(it -> logger.info("Replay: " + it))
-            .flatMapSingle(textToSpeechService::textToSpeech)
-            .doAfterSuccess(botAudioProviderService::loadItem)
+            .flatMapMany(chatService::createChatCompletion)
+            .doOnNext(it -> logger.info("Replay: " + it))
+            .flatMap(textToSpeechService::textToSpeech)
+            .doOnNext(botAudioProviderService::loadItem)
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete()
             .subscribe();
