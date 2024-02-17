@@ -1,38 +1,47 @@
 package krystian.kryszczak.discord.bot.service.chat;
 
-import com.theokanning.openai.completion.chat.ChatCompletionChoice;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.completion.chat.ChatMessageRole;
-import com.theokanning.openai.service.OpenAiService;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Single;
+import io.micronaut.serde.ObjectMapper;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.configuration.openai.OpenAiConfiguration;
+import krystian.kryszczak.discord.bot.http.openai.ReactorOpenAIHttpClient;
+import krystian.kryszczak.discord.bot.model.openai.completion.ChatCompletion;
+import krystian.kryszczak.discord.bot.model.openai.completion.Choice;
+import krystian.kryszczak.discord.bot.model.openai.completion.message.Message;
+import krystian.kryszczak.discord.bot.model.openai.completion.request.ChatCompletionRequestBody;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 @Singleton
 @RequiredArgsConstructor
 public final class ChatGptService implements ChatService {
-    private final OpenAiService openAiService;
+    private final ReactorOpenAIHttpClient httpClient;
+    private final ObjectMapper objectMapper;
     private final OpenAiConfiguration configuration;
 
     @Override
-    public Single<String> replay(@NotNull String message) {
-        return Flowable.fromIterable(
-            openAiService.createChatCompletion(
-                ChatCompletionRequest.builder()
-                    .model(configuration.getGptModel())
-                    .messages(List.of(new ChatMessage(ChatMessageRole.USER.value(), message)))
-                    .build()
-            ).getChoices())
-        .onErrorComplete()
-        .map(ChatCompletionChoice::getMessage)
-        .map(ChatMessage::getContent)
-        .collect(Collectors.joining());
+    public @NotNull Flux<String> createChatCompletion(final @NotNull String message) {
+        return httpClient.createChatCompletion(
+            ChatCompletionRequestBody.builder()
+                .model(configuration.getGptModel())
+                .messages(
+                    new Message[] {
+                        Message.builder().role("system").content("You are a helpful Discord server assistant.").build(),
+                        Message.builder().role("user").content(message).build()
+                    }
+                ).build()
+        ).mapNotNull(this::readValue)
+        .mapNotNull(ChatCompletion::choices)
+        .flatMapIterable(Arrays::asList)
+        .mapNotNull(Choice::message)
+        .mapNotNull(Message::content);
+    }
+
+    @SneakyThrows
+    private ChatCompletion readValue(String data) {
+        return objectMapper.readValue(data, ChatCompletion.class);
     }
 }
