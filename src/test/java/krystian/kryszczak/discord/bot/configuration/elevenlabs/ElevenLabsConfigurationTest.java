@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class ElevenLabsConfigurationTest {
     @Test
-    void testElevenlabsConfiguration() {
+    void elevenLabsConfiguration() {
         final Map<String, Object> items = new HashMap<>();
         items.put("eleven-labs.token", "test-token");
         items.put("eleven-labs.default-voice-id", "TxGEqnHWrfWFTfGW9XjX");
@@ -19,15 +19,15 @@ public final class ElevenLabsConfigurationTest {
         items.put("eleven-labs.default-voice-settings.stability", 0.5f);
         items.put("eleven-labs.default-voice-settings.similarity-boost", 1.0f);
 
-        ApplicationContext ctx = ApplicationContext.run(items);
-        ElevenLabsConfiguration elevenlabsConfiguration = ctx.getBean(ElevenLabsConfiguration.class);
-        VoiceSettings voiceSettings = elevenlabsConfiguration.builder.build();
+        final ApplicationContext ctx = ApplicationContext.run(items);
+        final ElevenLabsConfiguration elevenlabsConfiguration = ctx.getBean(ElevenLabsConfiguration.class);
+        final VoiceSettings voiceSettings = elevenlabsConfiguration.builder.build();
 
         assertEquals("test-token", elevenlabsConfiguration.getToken());
         assertEquals("TxGEqnHWrfWFTfGW9XjX", elevenlabsConfiguration.getDefaultVoiceId());
         assertEquals("eleven_monolingual_v1", elevenlabsConfiguration.getDefaultModelId());
-        assertEquals(0.5f, voiceSettings.getStability());
-        assertEquals(1.0f, voiceSettings.getSimilarityBoost());
+        assertEquals(0.5f, voiceSettings.stability());
+        assertEquals(1.0f, voiceSettings.similarityBoost());
 
         ctx.close();
     }

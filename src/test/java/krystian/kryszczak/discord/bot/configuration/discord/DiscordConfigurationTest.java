@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public final class DiscordConfigurationTest {
     @Test
-    void testDiscordConfiguration() {
+    void discordConfiguration() {
         final Map<String, Object> items = new HashMap<>();
         items.put("discord.token", System.getenv("DISCORD_BOT_TOKEN"));
         items.put("discord.audio-receiver-await-time-millis", 4500);
 
-        ApplicationContext ctx = ApplicationContext.run(items);
-        DiscordConfiguration discordConfiguration = ctx.getBean(DiscordConfiguration.class);
+        final ApplicationContext ctx = ApplicationContext.run(items);
+        final DiscordConfiguration discordConfiguration = ctx.getBean(DiscordConfiguration.class);
         final String token = discordConfiguration.getToken();
         final long audioReceiverAwaitTimeMillis = discordConfiguration.getAudioReceiverAwaitTimeMillis();
 
