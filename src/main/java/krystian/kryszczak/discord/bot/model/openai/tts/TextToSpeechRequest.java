@@ -3,10 +3,12 @@ package krystian.kryszczak.discord.bot.model.openai.tts;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Serdeable
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record TextToSpeechRequest(

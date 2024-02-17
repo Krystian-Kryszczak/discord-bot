@@ -3,12 +3,14 @@ package krystian.kryszczak.discord.bot.model.elevenlabs;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Singleton;
 import jakarta.validation.constraints.NotNull;
 import krystian.kryszczak.discord.bot.configuration.elevenlabs.ElevenLabsConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 
+@Serdeable
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record TextToSpeech(@NotNull String text, @NotNull String modelId, @NotNull VoiceSettings voiceSettings) {

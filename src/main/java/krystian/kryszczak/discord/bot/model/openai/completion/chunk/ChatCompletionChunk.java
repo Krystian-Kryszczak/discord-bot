@@ -3,11 +3,13 @@ package krystian.kryszczak.discord.bot.model.openai.completion.chunk;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Serdeable
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ChatCompletionChunk(

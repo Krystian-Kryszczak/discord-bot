@@ -3,6 +3,7 @@ package krystian.kryszczak.discord.bot.model.openai.completion.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import krystian.kryszczak.discord.bot.model.openai.completion.message.Message;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Builder
+@Serdeable
 @Introspected
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ChatCompletionRequestBody(

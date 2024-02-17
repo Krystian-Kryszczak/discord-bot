@@ -1,10 +1,12 @@
 package krystian.kryszczak.discord.bot.model.openai.completion.log;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Serdeable
 @Introspected
 public record TopLogprob(String token, float logprob, byte[] bytes) {
     @Override
