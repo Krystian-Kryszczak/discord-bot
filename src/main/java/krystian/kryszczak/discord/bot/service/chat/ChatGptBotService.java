@@ -1,5 +1,6 @@
 package krystian.kryszczak.discord.bot.service.chat;
 
+import io.micronaut.context.annotation.Secondary;
 import io.micronaut.serde.ObjectMapper;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.configuration.openai.OpenAiConfiguration;
@@ -15,9 +16,10 @@ import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
 
+@Secondary
 @Singleton
 @RequiredArgsConstructor
-public final class ChatGptService implements ChatService {
+public final class ChatGptBotService implements ChatBotService {
     private final ReactorOpenAIHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final OpenAiConfiguration configuration;

@@ -3,6 +3,7 @@ package krystian.kryszczak.discord.bot.service.chat;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Named;
 import krystian.kryszczak.discord.bot.http.openai.ReactorOpenAIHttpClient;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -16,12 +17,12 @@ import static org.mockito.Mockito.when;
 
 @MicronautTest
 @RequiredArgsConstructor
-public final class ChatServiceTest {
-    private final ChatService chatService;
+public final class ChatGptBotServiceTest {
+    private final @Named("ChatGpt") ChatBotService chatBotService;
 
     @Test
     public void chatServiceTest() {
-        final String replay = chatService.createChatCompletion("Hello!").blockFirst();
+        final String replay = chatBotService.createChatCompletion("Hello!").blockLast();
 
         assertNotNull(replay);
         assertFalse(replay.isBlank());

@@ -4,6 +4,7 @@ import io.micronaut.context.annotation.Primary;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Named;
 import krystian.kryszczak.discord.bot.http.elevenlabs.ReactorElevenLabsHttpClient;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,8 @@ import static org.mockito.Mockito.when;
 
 @MicronautTest
 @RequiredArgsConstructor
-public final class TextToSpeechServiceTest {
-    private final TextToSpeechService textToSpeechService;
+public final class ElevenLabsTextToSpeechServiceTest {
+    private final ElevenLabsTextToSpeechService textToSpeechService;
 
     @Test
     void testTextToSpeech() {

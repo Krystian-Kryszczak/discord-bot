@@ -3,7 +3,6 @@ package krystian.kryszczak.discord.bot.service.transcription;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.inject.Named;
 import krystian.kryszczak.discord.bot.http.openai.ReactorOpenAIHttpClient;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +19,11 @@ import static org.mockito.Mockito.when;
 @MicronautTest
 @RequiredArgsConstructor
 public final class OpenAiTranscriptionServiceTest {
-    private final @Named("OpenAi") TranscriptionService transcriptionService;
+    private final OpenAiTranscriptionService transcriptionService;
 
     @Test
     public void createTranscriptionReturnsExceptedValue() {
-        final File file = new File("src/test/resources/voices/Hello world!.mp3");
+        final File file = new File("./src/test/resources/voices/Hello world!.mp3");
         assertTrue(file.isFile());
         assertTrue(file.length() > 0);
 

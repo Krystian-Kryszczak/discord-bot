@@ -1,9 +1,9 @@
 package krystian.kryszczak.discord.bot.service.transcription;
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.inject.Named;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 @RequiredArgsConstructor
 public final class WhisperTranscriptionServiceTest {
-    private final @Named("Whisper") TranscriptionService transcriptionService;
+    private final WhisperTranscriptionService transcriptionService;
 
     @ParameterizedTest
     @MethodSource("pathnameProvider")
@@ -40,13 +40,15 @@ public final class WhisperTranscriptionServiceTest {
     }
 
     @Contract(" -> new")
-    public static @Unmodifiable List<Arguments> pathnameProvider() {
+    public static @Unmodifiable @NotNull List<Arguments> pathnameProvider() {
         return List.of(
-            Arguments.of("src/test/resources/voices/hello_world.mp3", "Hello world."),
-            Arguments.of("src/test/resources/voices/it's_our_time.wav", "It's our time to make a move. " +
+            Arguments.of("./src/test/resources/voices/hello_world.mp3", "Hello world."),
+            Arguments.of("./src/test/resources/voices/it's_our_time.wav",
+                "It's our time to make a move. " +
                 "It's our time to make amends. " +
                 "It's our time to break the rules. " +
-                "Let's begin.")
+                "Let's begin."
+            )
         );
     }
 }

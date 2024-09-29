@@ -2,7 +2,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.micronaut.application") version "4.3.2"
     id("io.micronaut.aot") version "4.3.2"
-    id 'org.jetbrains.kotlin.jvm'
+    id("org.jetbrains.kotlin.jvm")
 }
 
 version = "1.2.5"
@@ -40,11 +40,12 @@ dependencies {
     implementation("com.sedmelluq:lavaplayer:1.3.78")
     implementation("net.dv8tion:JDA:5.0.0-beta.20")
 
-    implementation("ai.djl:api:0.28.0")
-    implementation("ai.djl.pytorch:pytorch-engine:0.28.0")
-    implementation("ai.djl:bom:0.28.0")
-    implementation("ai.djl.pytorch:pytorch-model-zoo:0.28.0")
-    implementation("ai.djl.audio:audio:0.28.0")
+    implementation("ai.djl:api:0.30.0")
+    implementation("ai.djl.pytorch:pytorch-engine:0.30.0")
+    implementation("ai.djl.huggingface:tokenizers:0.30.0")
+    implementation("ai.djl:bom:0.30.0")
+    implementation("ai.djl.pytorch:pytorch-model-zoo:0.30.0")
+    implementation("ai.djl.audio:audio:0.30.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.1")
