@@ -1,5 +1,6 @@
 package krystian.kryszczak.discord.bot.service.transcription;
 
+import io.micronaut.context.annotation.Secondary;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.client.multipart.MultipartBody;
 import jakarta.inject.Singleton;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 
+@Secondary
 @Singleton
 @RequiredArgsConstructor
 public final class OpenAiTranscriptionService implements TranscriptionService {

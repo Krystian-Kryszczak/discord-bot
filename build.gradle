@@ -2,9 +2,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.micronaut.application") version "4.3.2"
     id("io.micronaut.aot") version "4.3.2"
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-version = "1.0.0"
+version = "1.2.5"
 group = "krystian.kryszczak.discord.bot"
 
 repositories {
@@ -39,16 +40,24 @@ dependencies {
     implementation("com.sedmelluq:lavaplayer:1.3.78")
     implementation("net.dv8tion:JDA:5.0.0-beta.20")
 
+    implementation("ai.djl:api:0.28.0")
+    implementation("ai.djl.pytorch:pytorch-engine:0.28.0")
+    implementation("ai.djl:bom:0.28.0")
+    implementation("ai.djl.pytorch:pytorch-model-zoo:0.28.0")
+    implementation("ai.djl.audio:audio:0.28.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.1")
     testImplementation("org.mockito:mockito-core:5.10.0")
     testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-13")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 
 application {
     mainClass.set("krystian.kryszczak.discord.bot.Application")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-    targetCompatibility = JavaVersion.toVersion("17")
 }
 
 tasks {
@@ -77,4 +86,7 @@ micronaut {
         deduceEnvironment = true
         optimizeNetty = true
     }
+}
+kotlin {
+    jvmToolchain(17)
 }

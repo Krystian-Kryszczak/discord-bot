@@ -3,6 +3,7 @@ package krystian.kryszczak.discord.bot.service.transcription;
 import io.micronaut.context.annotation.Primary;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Named;
 import krystian.kryszczak.discord.bot.http.openai.ReactorOpenAIHttpClient;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ import static org.mockito.Mockito.when;
 
 @MicronautTest
 @RequiredArgsConstructor
-public final class TranscriptionServiceTest {
-    private final TranscriptionService transcriptionService;
+public final class OpenAiTranscriptionServiceTest {
+    private final @Named("OpenAi") TranscriptionService transcriptionService;
 
     @Test
     public void createTranscriptionReturnsExceptedValue() {

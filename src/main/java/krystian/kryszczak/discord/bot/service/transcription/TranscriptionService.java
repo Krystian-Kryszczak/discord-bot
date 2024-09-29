@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 
-public sealed interface TranscriptionService permits OpenAiTranscriptionService {
+public sealed interface TranscriptionService permits OpenAiTranscriptionService, WhisperTranscriptionService {
     Mono<String> createTranscription(final byte @NotNull [] wavAudioData);
     Mono<String> createTranscription(final @NotNull File wavFile);
 }
