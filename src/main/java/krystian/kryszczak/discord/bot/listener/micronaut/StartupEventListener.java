@@ -7,6 +7,7 @@ import io.micronaut.runtime.event.annotation.EventListener;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.command.Command;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -38,10 +39,11 @@ public final class StartupEventListener {
                 final var bean = applicationContext.getBean(beanDefinition.getBeanType());
                 jda.addEventListener(bean);
 
-                logger.info("Discord Listener \"" + name + "\" has been loaded!");
+                logger.info("Discord Listener \"{}\" has been loaded!", name);
             });
     }
 
+    @SneakyThrows
     private void loadDiscordCommands() {
         final var definitions = applicationContext.getBeanDefinitions(Command.class);
         final var iterator = definitions.iterator();
@@ -64,7 +66,7 @@ public final class StartupEventListener {
 
             Command.commands.put(commandName, command);
 
-            logger.info("Discord Command \"" + className + "\" (" + commandName + ") has been loaded!");
+            logger.info("Discord Command \"{}\" ({}) has been loaded!", className, commandName);
 
             i++;
         }

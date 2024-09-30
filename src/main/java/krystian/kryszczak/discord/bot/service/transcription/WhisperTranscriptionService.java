@@ -11,6 +11,7 @@ import ai.djl.ndarray.NDManager;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.ModelNotFoundException;
 import ai.djl.repository.zoo.ZooModel;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import lombok.SneakyThrows;
 import org.bytedeco.ffmpeg.global.avutil;
@@ -24,6 +25,7 @@ import java.io.IOException;
 public final class WhisperTranscriptionService implements TranscriptionService, AutoCloseable {
     private final ZooModel<Audio, String> model;
     private final Predictor<Audio, String> predictor;
+    private final NDManager ndManager;
     private final AudioFactory audioFactory;
 
     public WhisperTranscriptionService() throws ModelNotFoundException, MalformedModelException, IOException {
@@ -37,6 +39,7 @@ public final class WhisperTranscriptionService implements TranscriptionService, 
 
         this.model = criteria.loadModel();
         this.predictor = model.newPredictor();
+        this.ndManager = model.getNDManager().newSubManager();
 
         this.audioFactory = AudioFactory.newInstance()
             .setChannels(1)
@@ -44,10 +47,12 @@ public final class WhisperTranscriptionService implements TranscriptionService, 
             .setSampleFormat(avutil.AV_SAMPLE_FMT_S16);
     }
 
+    @PreDestroy
     @Override
     public void close() {
         model.close();
         predictor.close();
+        ndManager.close();
     }
 
     private @NotNull Mono<String> createTranscription(@NotNull Audio audio) {
@@ -62,7 +67,7 @@ public final class WhisperTranscriptionService implements TranscriptionService, 
         return createTranscription(
             audioFactory.fromNDArray(
                 NDArray.decode(
-                    NDManager.newBaseManager(),
+                    ndManager,
                     wavAudioData
                 )
             )
