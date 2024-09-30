@@ -48,7 +48,7 @@ dependencies {
     implementation("ai.djl.audio:audio:0.30.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.11.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.1")
     testImplementation("org.mockito:mockito-core:5.10.0")
     testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-13")
