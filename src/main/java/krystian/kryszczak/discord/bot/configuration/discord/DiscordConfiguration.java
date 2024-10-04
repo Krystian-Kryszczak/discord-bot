@@ -8,4 +8,5 @@ import lombok.Data;
 public final class DiscordConfiguration {
     private String token;
     private Long audioReceiverAwaitTimeMillis;
+    private Boolean autoReconnect;
 }

@@ -1,4 +1,4 @@
-package krystian.kryszczak.discord.bot.listener.micronaut;
+package krystian.kryszczak.discord.bot.event.startup;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.event.StartupEvent;
@@ -6,6 +6,7 @@ import io.micronaut.inject.BeanDefinition;
 import io.micronaut.runtime.event.annotation.EventListener;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.discord.bot.command.Command;
+import krystian.kryszczak.discord.bot.configuration.discord.DiscordConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
@@ -21,12 +22,14 @@ public final class StartupEventListener {
     private static final Logger logger = LoggerFactory.getLogger(StartupEventListener.class);
 
     private final ApplicationContext applicationContext;
+    private final DiscordConfiguration configuration;
     private final JDA jda;
 
     @EventListener
     public void onStartupEvent(StartupEvent event) {
         loadDiscordListeners();
         loadDiscordCommands();
+        configure();
     }
 
     private void loadDiscordListeners() {
@@ -74,5 +77,9 @@ public final class StartupEventListener {
         jda.updateCommands()
             .addCommands(commandsData)
             .queue();
+    }
+
+    private void configure() {
+        jda.setAutoReconnect(configuration.getAutoReconnect());
     }
 }

@@ -11,4 +11,4 @@ after which it is sent back to the Discord user in the form of sound (voice).
 - Speech recognition » [Whisper (OpenAI)](https://platform.openai.com/docs/models/whisper)
 - Language model » [GPT](https://openai.com/chatgpt)
 - Text to speech » [ElevenLabs](https://elevenlabs.io/)
-- Testing » [JUnit](https://junit.org/)
+- Testing » [JUnit](https://junit.org/), [Mockito](https://site.mockito.org/)

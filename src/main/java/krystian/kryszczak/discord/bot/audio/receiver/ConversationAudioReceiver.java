@@ -32,7 +32,7 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
         final TimeUnit unit = TimeUnit.MILLISECONDS;
 
         this.executor = CompletableFuture.delayedExecutor(awaitTimeMillis, unit);
-        logger.info("Created a delayed executor with a delay of " + awaitTimeMillis + " " + TimeUnit.MILLISECONDS.name().toLowerCase() + ".");
+        logger.info("Created a delayed executor with a delay of {} {}.", awaitTimeMillis, TimeUnit.MILLISECONDS.name().toLowerCase());
     }
 
     private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
@@ -54,18 +54,18 @@ public final class ConversationAudioReceiver implements AudioReceiveHandler {
             queue.add(data);
             bytesCount += data.length;
 
-            activateListener();
+            activateListener(userAudio);
         } catch (OutOfMemoryError e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    private void activateListener() {
+    private void activateListener(UserAudio userAudio) {
         if (listening) return;
         listening = true;
 
         CompletableFuture.runAsync(() -> {
-            conversationService.replay(collectQueueData());
+            conversationService.replay(collectQueueData(), userAudio);
             CompletableFuture
                 .runAsync(() -> listening = false);
         }, executor);

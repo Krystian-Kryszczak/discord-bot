@@ -6,8 +6,12 @@ import krystian.kryszczak.discord.bot.service.provider.BotAudioProviderService;
 import krystian.kryszczak.discord.bot.service.transcription.TranscriptionService;
 import krystian.kryszczak.discord.bot.service.speech.text.TextToSpeechService;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.audio.UserAudio;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 
@@ -22,36 +26,24 @@ public final class ChatGptConversationService implements ConversationService {
     private final BotAudioProviderService botAudioProviderService;
 
     @Override
-    public void replay(byte[] audioData) {
-        transcriptionService.createTranscription(audioData)
-            .doOnSuccess(this::recognizedSpeechLog)
-            .flatMapMany(chatBotService::createChatCompletion)
-            .doOnNext(this::replyLog)
-            .flatMap(textToSpeechService::textToSpeech)
-            .doOnNext(botAudioProviderService::loadItem)
-            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
-            .onErrorComplete()
-            .subscribe();
+    public void replay(byte[] audioData, UserAudio userAudio) {
+        reply(transcriptionService.createTranscription(audioData), userAudio);
     }
 
     @Override
-    public void replay(File wavAudioFile) {
-        transcriptionService.createTranscription(wavAudioFile)
-            .doOnSuccess(this::recognizedSpeechLog)
+    public void replay(File wavAudioFile, UserAudio userAudio) {
+        reply(transcriptionService.createTranscription(wavAudioFile), userAudio);
+    }
+
+    private void reply(@NotNull Mono<String> transcription, UserAudio userAudio) {
+        transcription
+            .doOnSuccess(data -> logger.info("Recognized speech: {}", data))
             .flatMapMany(chatBotService::createChatCompletion)
-            .doOnNext(this::replyLog)
+            .doOnNext(data -> logger.info("Replay: {}", data))
             .flatMap(textToSpeechService::textToSpeech)
             .doOnNext(botAudioProviderService::loadItem)
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete()
             .subscribe();
-    }
-
-    private void recognizedSpeechLog(String data) {
-        logger.info("Recognized speech: {}", data);
-    }
-
-    private void replyLog(String data) {
-        logger.info("Replay: {}", data);
     }
 }
